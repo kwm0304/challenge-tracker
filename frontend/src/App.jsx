@@ -4,6 +4,7 @@ import Login from './components/Login'
 import Profile from './components/Profile'
 import Checklist from './components/Checklist'
 import NavBar from './components/NavBar'
+import StartChallenge from './components/StartChallenge'
 import { AuthProvider } from './context/AuthProvider'
 function App() {
   
@@ -15,6 +16,7 @@ function App() {
       <AuthProvider>
       <NavBar />
       <Routes>
+        <Route path="/start" element={<StartChallenge />} />
         <Route path="/checklist" element={<Checklist />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<Signup />} />

@@ -1,18 +1,23 @@
 package com.tracker5.service;
 
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
+import com.tracker5.entity.Challenge;
 import com.tracker5.entity.Checklist;
 import com.tracker5.entity.Image;
 import com.tracker5.exception.AppException;
+import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.ChecklistRepository;
 import com.tracker5.s3.S3Buckets;
 import com.tracker5.s3.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -21,10 +26,16 @@ public class ChecklistService {
     private final S3Service s3Service;
     private final S3Buckets s3Buckets;
     private final ChecklistRepository checklistRepository;
+    @Autowired
+    private ChallengeRepository challengeRepository;
     @Value("${aws.region}")
     private String awsRegion;
     //get checklist
-
+    public Checklist getCurrentDayChecklist(Long challengeId) {
+        Date today = new Date();
+        return checklistRepository.findByDateAndChallengeId(today, challengeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist for current date not found"));
+    }
     //post checklist
 
     //update checklist
@@ -60,5 +71,22 @@ public class ChecklistService {
 
     private boolean doesChecklistExist(Long checklistId) {
         return checklistRepository.existsById(checklistId);
+    }
+
+    public Checklist updateChecklist(Long checklistId, Checklist checklistDetails) {
+        Checklist existingChecklist = checklistRepository.findById(checklistId)
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
+        updateFields(existingChecklist, checklistDetails);
+        return checklistRepository.save(existingChecklist);
+    }
+
+    public void updateFields(Checklist existingChecklist, Checklist checklistDetails) {
+        existingChecklist.setWorkoutOne(checklistDetails.getWorkoutOne());
+        existingChecklist.setWorkoutTwo(checklistDetails.getWorkoutTwo());
+        existingChecklist.setDrinkWater(checklistDetails.getDrinkWater());
+        existingChecklist.setReadTenPages(checklistDetails.getReadTenPages());
+        existingChecklist.setTakePicture(checklistDetails.getTakePicture());
+        existingChecklist.setNoAlcohol(checklistDetails.getNoAlcohol());
+        existingChecklist.setNoCheatMeals(checklistDetails.getNoCheatMeals());
     }
 }

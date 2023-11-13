@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import java.util.Date;
 
 @Data
@@ -13,6 +14,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "checklist", indexes = {
+@Index(name = "idx_checklist_date", columnList = "date")
+})
 public class Checklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
