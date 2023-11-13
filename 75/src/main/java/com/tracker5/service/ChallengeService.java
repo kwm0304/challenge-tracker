@@ -54,4 +54,11 @@ public class ChallengeService {
         challengeRepository.save(challenge);
         return challenge;
     }
+
+    public Long getCurrentChallengeIdForUser(Long userId) {
+        return challengeRepository.findActiveChallengeByUserId(userId)
+                .map(ChallengeDto::getId)
+                .orElse(null);
+
+    }
 }

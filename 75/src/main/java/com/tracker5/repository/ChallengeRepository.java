@@ -14,4 +14,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT c.startDate as startDate, c.endDate as endDate, c.dayNumber as dayNumber " +
     "FROM Challenge c WHERE c.user.id = :userId AND c.active = true")
     Optional<ChallengeDto> findActiveChallengeByUserId(Long userId);
-}
+
+
+} 

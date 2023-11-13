@@ -11,6 +11,7 @@ import com.tracker5.repository.RoleRepository;
 import com.tracker5.repository.UserRepository;
 import com.tracker5.response.JwtResponse;
 import com.tracker5.response.MessageResponse;
+import com.tracker5.service.ChallengeService;
 import com.tracker5.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,9 @@ public class AuthenticationController {
     AuthenticationManager authenticationManager;
 
     @Autowired
+    ChallengeService challengeService;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -57,11 +61,14 @@ public class AuthenticationController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+        Long currentChallengeId = challengeService.getCurrentChallengeIdForUser(userDetails.getId());
+
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles,
+                currentChallengeId));
     }
 
     @PostMapping("/signup")

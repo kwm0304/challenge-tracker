@@ -26,40 +26,50 @@ const Signup = () => {
     
   }
 
+  const formInputClass = "w-full px-3 py-2 text-gray-700 border rounded-lg  focus:border-blue-500 ";
+  const formLabelClass = "block text-slate-300 text-sm font-bold mb-2";
   return (
-    <div>
+    <div className='flex flex-col items-center justify-center min-h-screen bg-slate-600'>
+      <div className="w-96 p-6 bg-slate-800 rounded-lg shadow-lg">
+        <h1 className="text-amber-500 font-bold text-3xl pb-6 text-center">Signup</h1>
+      
       <form onSubmit={handleSignup}>
-        <div>
-          <label htmlFor="firstName">Username</label>
+        <div className='mb-4'>
+          <label htmlFor="username" className={formLabelClass}>Username</label>
           <input
             type="text"
-            id="firstName"
+            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className={formInputClass}
             />
         </div>
         
-        <div>
-          <label htmlFor="email">Email</label>
+        <div className='mb-4'>
+          <label htmlFor="email" className={formLabelClass}>Email</label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={formInputClass}
             />
         </div>
-        <div>
-          <label htmlFor="password">Password</label>
+        <div className='mb-4'>
+          <label htmlFor="password" className={formLabelClass}>Password</label>
           <input
             type="text"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={formInputClass}
             />
         </div>
-        
-        <button>Submit</button>
+        <div className='flex justify-center'>
+        <button className='bg-green-600 text-lg uppercase text-white  font-semibold w-24 my-4 rounded-xl p-2'>Submit</button>
+        </div>
       </form>
+      </div>
     </div>
   )
 }

@@ -10,12 +10,23 @@ public class JwtResponse {
     private String email;
     private List<String> roles;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+    private Long currentChallengeId;
+
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, Long currentChallengeId) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
+        this.currentChallengeId = currentChallengeId;
+    }
+
+    public Long getCurrentChallengeId() {
+        return currentChallengeId;
+    }
+
+    public void setCurrentChallengeId(Long currentChallengeId) {
+        this.currentChallengeId = currentChallengeId;
     }
 
     public String getAccessToken() {

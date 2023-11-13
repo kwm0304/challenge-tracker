@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/checklist")
 public class ChecklistController {
 
-    private ChecklistService checklistService;
+    private final ChecklistService checklistService;
 
     @PutMapping("/{checklistId}")
     public ResponseEntity<Checklist> submitChecklist(@PathVariable Long checklistId, @RequestBody Checklist checklistDetails) {
@@ -20,7 +20,7 @@ public class ChecklistController {
         return new ResponseEntity<>(submittedChecklist, HttpStatus.OK);
     }
 
-    @GetMapping("/current/{checklistId}")
+    @GetMapping("/current/{challengeId}")
     public ResponseEntity<Checklist> getCurrentChecklist(@PathVariable Long challengeId) {
         Checklist currentDaysChecklist = checklistService.getCurrentDayChecklist(challengeId);
         return new ResponseEntity<>(currentDaysChecklist, HttpStatus.OK);
