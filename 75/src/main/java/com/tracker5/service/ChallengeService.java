@@ -29,7 +29,7 @@ public class ChallengeService {
                 new ResourceNotFoundException("User not found"));
         Challenge challenge = new Challenge();
         challenge.setUser(user);
-
+        user.setHasActiveChallenge(true);
         Date startDate = new Date();
         challenge.setStartDate(startDate);
         challenge.setActive(true);

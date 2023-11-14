@@ -4,9 +4,10 @@ import ChecklistItem from "./ChecklistItem"
 import Gif from "./Gif"
 
 const Checklist = () => {
-  const accessToken = JSON.parse(localStorage.getItem("currentUser")).accessToken;
-  
   const challengeId = JSON.parse(localStorage.getItem("currentUser")).currentChallengeId;
+  console.log(challengeId)
+  const accessToken = JSON.parse(localStorage.getItem("currentUser")).accessToken;
+console.log(accessToken)
   const [checklistState, setChecklistState] = useState({
     workout1: false,
     workout2: false,
@@ -22,7 +23,10 @@ const Checklist = () => {
   useEffect(() => {
     const fetchDate = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/checklist/current/${challengeId}`)
+        const response = await axios.get(`http://localhost:8080/api/checklist/current/${challengeId}`, {
+           headers: {
+            'Authorization': `Bearer ${accessToken}`
+          } });
         console.log(response)
         setDate(response.data.date)
       } catch (err) {
@@ -31,6 +35,7 @@ const Checklist = () => {
     }
     fetchDate()
   }, [challengeId])
+  console.log(date)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +44,7 @@ const Checklist = () => {
       const response = await axios.put(`http://localhost:8080/api/checklist/current/${challengeId}`, checklistState,{
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: 'Bearer ' + JSON.parse(localStorage.getItem("currentUser")).accessToken,
           }
       })
       console.log('checklist submission', response)

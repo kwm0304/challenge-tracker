@@ -1,22 +1,25 @@
 package com.tracker5.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+import java.util.Set;
+
+@Getter
+@Setter
 public class ChallengeDto {
-    private int dayNumber;
     private Long id;
+    private Date startDate;
+    private Date endDate;
+    private int dayNumber;
+    private ChecklistDto todaysChecklist;
 
-    public int getDayNumber() {
-        return dayNumber;
-    }
-
-    public void setDayNumber(int dayNumber) {
-        this.dayNumber = dayNumber;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+    public ChallengeDto(Long id, Date startDate, Date endDate, int dayNumber, ChecklistDto todaysChecklist) {
         this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.dayNumber = dayNumber;
+        this.todaysChecklist = todaysChecklist;
     }
 }

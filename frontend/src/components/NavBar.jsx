@@ -1,24 +1,21 @@
-import { useState, useEffect } from "react"
-import { logout, getCurrentUser } from "../service/authService"
+
+import { useAuth } from "../context/AuthContext"
+
 import { Link } from "react-router-dom"
 
 const NavBar = () => {
-  const [loggedIn, setIsLoggedIn] = useState(false)
-  useEffect(() => {
-    const user = getCurrentUser()
-    if (user) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    logout()
-    setIsLoggedIn(false)
+  const {  userIsAuthenticated, userLogout } = useAuth();
+ 
+  const logout = () => {
+    userLogout()
+    
   }
+
+  
   return (
     <nav className="p-2 px-4 h-20 fixed top-0  w-screen flex justify-between items-center bg-slate-800 text-white">
-      {loggedIn ? (
-          <button onClick={handleLogout} className='font-semibold uppercase text-amber-400 cursor-pointer border-2 border-amber-500 rounded-lg p-1 focus:bg-amber-500 focus:text-white focus:scale-125 transform transition hover:scale-105 duration-300 ease-in-out'>
+      {userIsAuthenticated ? (
+          <button onClick={logout} className='font-semibold uppercase text-amber-400 cursor-pointer border-2 border-amber-500 rounded-lg p-1 focus:bg-amber-500 focus:text-white focus:scale-125 transform transition hover:scale-105 duration-300 ease-in-out'>
             <Link to="/login">Logout</Link>
           </button>
         ) : (

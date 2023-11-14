@@ -1,37 +1,43 @@
-import { useState, useRef } from 'react'
-import { login } from '../service/authService'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useInput from '../hooks/useInput';
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext'
+import { authApi } from '../api/authenticationService';
+import { parseJwt } from '../helpers';
+
 
 const Login = () => {
-  const { setAuth } = useAuth();
+  const Auth = useAuth();
+  const isLoggedIn = Auth.userIsAuthenticated();
 
-  
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate();
-  const userRef = useRef();
 
-  const [user, resetUser, userAttributes] = useInput('user', '')
+  const navigate = useNavigate();
+  
+ 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await login(user, password)
-      
-        const accessToken = response.data.accessToken;
-        const roles = response.data.roles;
-        setAuth({ user, password, roles, accessToken });
-        if (accessToken) {
-          localStorage.setItem("currentUser", JSON.stringify(response.data));
-        }
-        resetUser();
-        setPassword('');
-        navigate('/profile')
-    } catch (err) {
-      console.error("Login failed", err)
+      const response = await authApi.authenticate(username, password)
+      const { accessToken } = response.data;
+      console.log(accessToken)
+      console.log(response)
+      const data = parseJwt(accessToken);
+      const authenticatedUser = { data, accessToken };
+      console.log(authenticatedUser)
+
+      Auth.userLogin(authenticatedUser);
+      setUsername('');
+      setPassword('');
+    } catch (error) {
+      console.log(error)
+    }
   }
-}
+  if (isLoggedIn) {
+    console.log("logged in")
+    return navigate('/profile')
+  }
 
 const formInputClass = "w-full px-3 py-2 text-gray-700 border rounded-lg  focus:border-blue-500 ";
   const formLabelClass = "block text-slate-300 text-sm font-bold mb-2";
@@ -47,10 +53,10 @@ const formInputClass = "w-full px-3 py-2 text-gray-700 border rounded-lg  focus:
           <input
             type="text"
             id="username"
-            ref={userRef}
-            {...userAttributes}
+            value={username}
             required
             className={formInputClass}
+            onChange={(e) => setUsername(e.target.value)}
             />
         </div>
         <div className='m'>

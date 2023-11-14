@@ -1,13 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+
 const StartChallenge = () => {
 const navigate = useNavigate();
 const userId = JSON.parse(localStorage.getItem("currentUser")).id;
+console.log(typeof userId)
+const accessToken = JSON.parse(localStorage.getItem("currentUser")).accessToken;
+console.log(userId)
   const handleStartChallenge = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8080/api/challenge/${userId}`);
-      if (response.status === 200) {
+      const response = await axios.post(`http://localhost:8080/api/challenge/${userId}`, {}, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+      });
+        if (response.status === 201) {
         console.log("challenge started")
         navigate("/checklist")
       }

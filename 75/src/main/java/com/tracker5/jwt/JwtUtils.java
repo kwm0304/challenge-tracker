@@ -1,17 +1,21 @@
 package com.tracker5.jwt;
 
-import com.tracker5.service.UserDetailsImpl;
+import com.tracker5.security.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.io.Decoders;
 
-import java.security.Key;
+import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
@@ -26,27 +30,40 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
+        List<String> roles = userPrincipal.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        byte[] signingKey = secretKey.getBytes();
+
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpMs))
-                .signWith(key(), SignatureAlgorithm.HS256)
+                .setHeaderParam("typ", "JWT")
+                .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS256)
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(jwtExpMs).toInstant()))
+                .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
+                .setId(UUID.randomUUID().toString())
+                .setSubject(userPrincipal.getUsername())
+                .setAudience("frontend")
+                .claim("rol", roles)
+                .claim("username", userPrincipal.getUsername())
+                .claim("email", userPrincipal.getEmail())
+
                 .compact();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-    }
 
-    public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key()).build()
-                .parseClaimsJws(token).getBody().getSubject();
-    }
 
-    public boolean validateJwtToken(String authToken) {
+    public Optional<Jws<Claims>> validateJwtToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
-            return true;
+            byte[] signingKey = secretKey.getBytes();
+
+            Jws<Claims> jws = Jwts.parserBuilder()
+                    .setSigningKey(signingKey)
+                    .build()
+                    .parseClaimsJws(token);
+            return Optional.of(jws);
+
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
@@ -56,7 +73,7 @@ public class JwtUtils {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e);
         }
-        return false;
+        return Optional.empty();
     }
 
 }

@@ -1,126 +1,69 @@
 package com.tracker5.controller;
 
 
+import com.tracker5.dto.AuthResponse;
 import com.tracker5.dto.LoginDto;
 import com.tracker5.dto.SignUpDto;
-import com.tracker5.entity.ERole;
-import com.tracker5.entity.Role;
 import com.tracker5.entity.User;
+import com.tracker5.exception.AppException;
 import com.tracker5.jwt.JwtUtils;
-import com.tracker5.repository.RoleRepository;
-import com.tracker5.repository.UserRepository;
-import com.tracker5.response.JwtResponse;
-import com.tracker5.response.MessageResponse;
-import com.tracker5.service.ChallengeService;
-import com.tracker5.service.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.tracker5.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthenticationController {
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    ChallengeService challengeService;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    JwtUtils jwtUtils;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-        Long currentChallengeId = challengeService.getCurrentChallengeIdForUser(userDetails.getId());
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles,
-                currentChallengeId));
+    public AuthResponse login(@RequestBody LoginDto loginDto) {
+        String token = getToken(loginDto.getUsername(), loginDto.getPassword());
+        System.out.println(token);
+        return new AuthResponse(token);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
-                if (userRepository.existsByUsername(signUpDto.getUsername())) {
-                    return ResponseEntity.badRequest()
-                            .body(new MessageResponse("Error, Username is already taken"));
+    public AuthResponse signup(@RequestBody SignUpDto signUpDto) {
+                if (userService.hasUserWithUsername(signUpDto.getUsername())) {
+                    throw new AppException("User already exists", HttpStatus.BAD_REQUEST);
                 }
-                if (userRepository.existsByEmail(signUpDto.getEmail())) {
-                    return ResponseEntity.badRequest()
-                            .body(new MessageResponse("Error, Email is already taken"));
+                if (userService.hasUserWithEmail(signUpDto.getEmail())) {
+                    throw new AppException("Email already exists", HttpStatus.BAD_REQUEST);
                 }
+                userService.saveUser(mapSignUpDtoToUser(signUpDto));
 
-        User user = new User(
-                signUpDto.getUsername(),
-                signUpDto.getEmail(),
-                passwordEncoder.encode(signUpDto.getPassword()));
+                String token = getToken(signUpDto.getUsername(), signUpDto.getPassword());
+                return new AuthResponse(token);
+    }
 
-        Set<String> strRoles = signUpDto.getRole();
-        Set<Role> roles = new HashSet<>();
+    private String getToken(String username, String password) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        return jwtUtils.generateJwtToken(authentication);
+    }
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-
-                        break;
-                    case "mod":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
-        }
-        LocalDateTime now = LocalDateTime.now();
-        user.setRoles(roles);
+    LocalDateTime now = LocalDateTime.now();
+    private User mapSignUpDtoToUser(SignUpDto signUpDto) {
+        User user = new User();
+        user.setUsername(signUpDto.getUsername());
+        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
         user.setCreatedDate(now);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+        user.setEmail(signUpDto.getEmail());
+        user.setRoles("USER");
+        return user;
     }
 }

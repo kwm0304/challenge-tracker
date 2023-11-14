@@ -6,19 +6,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/challenge")
 public class ChallengeController {
     @Autowired
     private ChallengeService challengeService;
 
-    @PostMapping("/{userId}")
+    @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Challenge> createChallenge(@PathVariable(name = "userId") Long userId) {
         Challenge newChallenge = challengeService.createChallenge(userId);
         return new ResponseEntity<>(newChallenge, HttpStatus.CREATED);
