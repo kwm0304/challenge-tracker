@@ -1,5 +1,6 @@
 package com.tracker5.service;
 
+import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
 
 import javax.swing.text.html.Option;
@@ -15,4 +16,6 @@ public interface UserService {
     User validateAndGetUserByUsername(String username);
     User saveUser(User user);
     void deleteUser(User user);
+
+    Optional<Long> getActiveChallenge(Long userId);
 }

@@ -33,6 +33,12 @@ function getUserProfile(user) {
   })
 }
 
+function getCurrentChecklist(user) {
+  return apiClient.get('/api/checklist/current', {
+    headers: { 'Authorization': bearerAuth(user) }
+  })
+}
+
 
 function bearerAuth(user) {
   return `Bearer ${user.accessToken}`
@@ -42,5 +48,6 @@ export const authApi = {
   signup,
   startChallenge,
   getUserProfile,
-  getUser
+  getUser,
+  getCurrentChecklist
 }

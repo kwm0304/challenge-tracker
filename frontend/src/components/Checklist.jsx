@@ -2,12 +2,13 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import ChecklistItem from "./ChecklistItem"
 import Gif from "./Gif"
+import { authApi } from "../api/authenticationService"
+import { useAuth } from "../context/AuthContext";
 
 const Checklist = () => {
-  const challengeId = JSON.parse(localStorage.getItem("currentUser")).currentChallengeId;
-  console.log(challengeId)
-  const accessToken = JSON.parse(localStorage.getItem("currentUser")).accessToken;
-console.log(accessToken)
+  const Auth = useAuth();
+  const user = Auth.user
+  
   const [checklistState, setChecklistState] = useState({
     workout1: false,
     workout2: false,
@@ -23,10 +24,7 @@ console.log(accessToken)
   useEffect(() => {
     const fetchDate = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/checklist/current/${challengeId}`, {
-           headers: {
-            'Authorization': `Bearer ${accessToken}`
-          } });
+        const response = await authApi.getCurrentChecklist(user)
         console.log(response)
         setDate(response.data.date)
       } catch (err) {
@@ -34,7 +32,7 @@ console.log(accessToken)
       }
     }
     fetchDate()
-  }, [challengeId])
+  }, [user])
   console.log(date)
 
   const handleSubmit = async (e) => {

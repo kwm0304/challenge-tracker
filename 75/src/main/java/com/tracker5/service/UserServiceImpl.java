@@ -1,5 +1,6 @@
 package com.tracker5.service;
 
+import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
 import com.tracker5.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,4 +51,11 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(User user) {
         userRepository.delete(user);
     }
+
+    @Override
+    public Optional<Long> getActiveChallenge(Long userId) {
+        return userRepository.findActiveChallengeByUserId(userId);
+    }
+
+
 }
