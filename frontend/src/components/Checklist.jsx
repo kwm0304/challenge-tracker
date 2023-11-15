@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
 import ChecklistItem from "./ChecklistItem"
 import Gif from "./Gif"
 import { authApi } from "../api/authenticationService"
@@ -11,22 +10,23 @@ const Checklist = () => {
   console.log(user)
   
   const [checklistState, setChecklistState] = useState({
-    workout1: false,
-    workout2: false,
+    workoutOne: false,
+    workoutTwo: false,
     drinkWater: false,
     noAlcohol: false,
     readTenPages: false,
-    noCheatMeal: false,
+    noCheatMeals: false,
     takePicture: false,
   })
   const [submitted, setSubmitted] = useState(false)
   const [date, setDate] = useState('')
+  const [checklistId, setChecklistId] = useState(null)
 
   useEffect(() => {
     const fetchDate = async () => {
       try {
         const response = await authApi.getCurrentChecklist(user)
-        console.log(response)
+        setChecklistId(response.data.id)
         setDate(response.data.date)
       } catch (err) {
         console.error(err)
@@ -40,7 +40,7 @@ const Checklist = () => {
     e.preventDefault();
     
     try {
-      const response = await authApi.submitCurrentChecklist(user, checklistState)
+      const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
       console.log('checklist submission', response)
       setSubmitted(true)
     }
@@ -59,12 +59,12 @@ const Checklist = () => {
       <p className="text-amber-300 text-3xl text center mt-8 font-bold">{date}</p>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-rows-7 gap-y-6 h-full px-2 w-96 text-center pt-4 items-center">
-          <ChecklistItem label="Workout 1" value={checklistState.workout1} onChange={(e) => handleChecklistChange(e, "workout1")} />
-          <ChecklistItem label="Workout2" value={checklistState.workout2} onChange={e => handleChecklistChange(e, 'workout2')} />
+          <ChecklistItem label="Workout 1" value={checklistState.workoutOne} onChange={(e) => handleChecklistChange(e, "workoutOne")} />
+          <ChecklistItem label="Workout2" value={checklistState.workoutTwo} onChange={e => handleChecklistChange(e, 'workoutTwo')} />
           <ChecklistItem label="Drink Water" value={checklistState.drinkWater} onChange={e => handleChecklistChange(e, 'drinkWater')} />
           <ChecklistItem label="No Alcohol" value={checklistState.noAlcohol} onChange={e => handleChecklistChange(e, 'noAlcohol')} />
           <ChecklistItem label="Read 10 Pages" value={checklistState.readTenPages} onChange={e => handleChecklistChange(e, 'readTenPages')} />
-          <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeal} onChange={e => handleChecklistChange(e, 'noCheatMeal')} />
+          <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeals} onChange={e => handleChecklistChange(e, 'noCheatMeals')} />
           <ChecklistItem label="Take Picture" value={checklistState.takePicture} onChange={e => handleChecklistChange(e, 'takePicture')} />
         </div>
         <div className='flex justify-center'>

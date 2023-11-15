@@ -39,8 +39,8 @@ function getCurrentChecklist(user) {
   })
 }
 
-function submitCurrrentChecklist(user, checklist) {
-  return apiClient.post('/api/checklist/current', checklist, {
+function submitCurrentChecklist(user, checklist, checklistId) {
+  return apiClient.put(`/api/checklist/current/${checklistId}`, checklist, {
     headers: { 
       'Content-Type': 'application/json',
       'Authorization': bearerAuth(user)
@@ -59,5 +59,5 @@ export const authApi = {
   getUserProfile,
   getUser,
   getCurrentChecklist,
-  submitCurrrentChecklist
+  submitCurrentChecklist
 }
