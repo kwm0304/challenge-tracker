@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { parseJwt } from '../helpers'
-import { Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { authApi } from '../api/authenticationService'
 import { useAuth } from '../context/AuthContext'
 
@@ -10,7 +10,7 @@ const Signup = () => {
   const [password, setPassword] = useState('')
   
   const Auth = useAuth();
-  const isLoggedIn = Auth.userIsAuthenticated();
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -23,12 +23,11 @@ const Signup = () => {
       const authenticatedUser = { data, accessToken };
 
       Auth.userLogin(authenticatedUser);
+      navigate('/checklist');
       setUsername('');
       setEmail('');
       setPassword('');
-      if (isLoggedIn) {
-        return <Navigate to='/profile' />
-      }
+      
     } catch (error) {
       if (error.response && error.response.data) {
         console.log("Invalid signup", error.response.data)

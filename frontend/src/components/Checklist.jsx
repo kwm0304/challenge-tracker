@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 const Checklist = () => {
   const Auth = useAuth();
   const user = Auth.user
-  console.log(user)
+  console.log(user.data.sub)
   
   const [checklistState, setChecklistState] = useState({
     workoutOne: false,
@@ -26,8 +26,9 @@ const Checklist = () => {
     const today = new Date().toISOString().split('T')[0];
     const fetchedDate = localStorage.getItem('fetchedDate');
     const isSubmitted = localStorage.getItem('submitted') === 'true';
-
-    if (fetchedDate === today && isSubmitted) {
+    const submittedUser = localStorage.getItem('userSubmitted');
+//if user is different than submitted user, set submitted to false
+    if (fetchedDate === today && !isSubmitted) {
       setSubmitted(true);
       const storedChecklist = localStorage.getItem('checklistData');
       if (storedChecklist) {
@@ -42,12 +43,13 @@ const Checklist = () => {
   const fetchDate = async () => {
     try {
       const response = await authApi.getCurrentChecklist(user)
+      console.log('response', response)
       setChecklistId(response.data.id)
       setDate(response.data.date)
 
-      const today = new Date().toISOString.split('T')[0];
+      const today = new Date().toISOString().split('T')[0]; 
       console.log(today)
-      localStorage.stItem('fetchedDate', today);
+      localStorage.setItem('fetchedDate', today);
       localStorage.setItem('checklistData', JSON.stringify(response.data))
       localStorage.setItem('submitted', 'false')
     } catch (err) {
@@ -65,6 +67,7 @@ const Checklist = () => {
       console.log('checklist submission', response)
       setSubmitted(true)
       localStorage.setItem('submitted', 'true')
+      localStorage.setItem('userSubmitted', user.data.sub)
     }
     catch (err) {
       console.error(err)
@@ -72,7 +75,13 @@ const Checklist = () => {
   }
     const handleChecklistChange = (e, key) => {
       const updatedState = {...checklistState, [key]: e.target.checked}
-      setChecklistState(updatedState)}
+      setChecklistState(updatedState)
+    }
+
+    const countChecked = () => {
+      return Object.values(checklistState).filter(value => value).length;
+    }
+    localStorage.setItem('numberCompleted', countChecked)
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">
