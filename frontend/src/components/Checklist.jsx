@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 const Checklist = () => {
   const Auth = useAuth();
   const user = Auth.user
+  console.log(user)
   
   const [checklistState, setChecklistState] = useState({
     workout1: false,
@@ -34,17 +35,12 @@ const Checklist = () => {
     fetchDate()
   }, [user])
   console.log(date)
-
+  console.log(checklistState)
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const response = await axios.put(`http://localhost:8080/api/checklist/current/${challengeId}`, checklistState,{
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: 'Bearer ' + JSON.parse(localStorage.getItem("currentUser")).accessToken,
-          }
-      })
+      const response = await authApi.submitCurrentChecklist(user, checklistState)
       console.log('checklist submission', response)
       setSubmitted(true)
     }
@@ -60,7 +56,7 @@ const Checklist = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">
       {submitted ? <Gif /> : (
         <>
-      <p className="text-amber-300 text-3xl text center">{date}</p>
+      <p className="text-amber-300 text-3xl text center mt-8 font-bold">{date}</p>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-rows-7 gap-y-6 h-full px-2 w-96 text-center pt-4 items-center">
           <ChecklistItem label="Workout 1" value={checklistState.workout1} onChange={(e) => handleChecklistChange(e, "workout1")} />
@@ -68,7 +64,7 @@ const Checklist = () => {
           <ChecklistItem label="Drink Water" value={checklistState.drinkWater} onChange={e => handleChecklistChange(e, 'drinkWater')} />
           <ChecklistItem label="No Alcohol" value={checklistState.noAlcohol} onChange={e => handleChecklistChange(e, 'noAlcohol')} />
           <ChecklistItem label="Read 10 Pages" value={checklistState.readTenPages} onChange={e => handleChecklistChange(e, 'readTenPages')} />
-          <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeal} onChange={e => handleChecklistChange(e, 'noCheatMeals')} />
+          <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeal} onChange={e => handleChecklistChange(e, 'noCheatMeal')} />
           <ChecklistItem label="Take Picture" value={checklistState.takePicture} onChange={e => handleChecklistChange(e, 'takePicture')} />
         </div>
         <div className='flex justify-center'>

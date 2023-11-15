@@ -3,13 +3,14 @@ package com.tracker5.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
 @Setter
 public class ChecklistDto {
     private Long id;
-    private Date date;
+    private LocalDate date;
     private Boolean workoutOne;
     private Boolean workoutTwo;
     private Boolean readTenPages;
@@ -18,7 +19,7 @@ public class ChecklistDto {
     private Boolean noAlcohol;
     private Boolean takePicture;
 
-    public ChecklistDto(Long id, Date date, Boolean workoutOne, Boolean workoutTwo, Boolean readTenPages, Boolean drinkWater, Boolean noCheatMeals, Boolean noAlcohol, Boolean takePicture) {
+    public ChecklistDto(Long id, LocalDate date, Boolean workoutOne, Boolean workoutTwo, Boolean readTenPages, Boolean drinkWater, Boolean noCheatMeals, Boolean noAlcohol, Boolean takePicture) {
         this.id = id;
         this.date = date;
         this.workoutOne = workoutOne;

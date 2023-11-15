@@ -22,7 +22,7 @@ public class ChecklistController {
     private final ChecklistService checklistService;
     private final UserService userService;
 
-    @PutMapping("/{checklistId}")
+    @PutMapping("/current/{checklistId}")
     public ResponseEntity<Checklist> submitChecklist(@PathVariable Long checklistId, @RequestBody Checklist checklistDetails) {
         Checklist submittedChecklist = checklistService.updateChecklist(checklistId, checklistDetails);
         return new ResponseEntity<>(submittedChecklist, HttpStatus.OK);

@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -32,7 +35,9 @@ public class ChecklistService {
     private String awsRegion;
     //get checklist
     public Checklist getCurrentDayChecklist(Long challengeId) {
-        Date today = new Date();
+        LocalDate today = LocalDate.now();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+
         return checklistRepository.findByDateAndChallengeId(today, challengeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist for current date not found"));
     }

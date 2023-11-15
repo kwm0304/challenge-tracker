@@ -42,7 +42,7 @@ public class UserMapperImpl implements UserMapper {
     private ChecklistDto getTodaysCheclist(Set<Checklist> checklists) {
         LocalDate today = LocalDate.now();
         return checklists.stream()
-                .filter(checklist -> toLocalDate(checklist.getDate()).equals(today))
+                .filter(checklist -> checklist.getDate().equals(today))
                 .findFirst()
                 .map(this::toChecklistDto)
                 .orElse(null);

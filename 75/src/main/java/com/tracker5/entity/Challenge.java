@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,11 +21,11 @@ public class Challenge {
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

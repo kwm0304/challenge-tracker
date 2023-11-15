@@ -1,10 +1,11 @@
 package com.tracker5.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class Checklist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date date;
+    private LocalDate date;
 //              FORM VALUES
     @Column(columnDefinition = "BOOLEAN")
     private Boolean workoutOne;
@@ -39,6 +40,7 @@ public class Checklist {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
+    @JsonIgnore
     private Challenge challenge;
 
     @OneToOne(mappedBy = "checklist", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)

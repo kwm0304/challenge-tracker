@@ -39,6 +39,15 @@ function getCurrentChecklist(user) {
   })
 }
 
+function submitCurrrentChecklist(user, checklist) {
+  return apiClient.post('/api/checklist/current', checklist, {
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': bearerAuth(user)
+    }
+  })
+}
+
 
 function bearerAuth(user) {
   return `Bearer ${user.accessToken}`
@@ -49,5 +58,6 @@ export const authApi = {
   startChallenge,
   getUserProfile,
   getUser,
-  getCurrentChecklist
+  getCurrentChecklist,
+  submitCurrrentChecklist
 }

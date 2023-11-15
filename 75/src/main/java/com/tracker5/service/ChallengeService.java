@@ -10,7 +10,9 @@ import com.tracker5.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Service
 public class ChallengeService {
@@ -30,26 +32,22 @@ public class ChallengeService {
         Challenge challenge = new Challenge();
         challenge.setUser(user);
         user.setHasActiveChallenge(true);
-        Date startDate = new Date();
+
+        LocalDate startDate = LocalDate.now();
         challenge.setStartDate(startDate);
         challenge.setActive(true);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-
         Set<Checklist> checklists = new HashSet<>();
+        LocalDate endDate = startDate.plusDays(74);
 
-        for (int i = 0; i < 75; i++) {
+        IntStream.range(0,75).forEach(i -> {
             Checklist checklist = new Checklist();
-            checklist.setDate(calendar.getTime());
+            checklist.setDate(startDate.plusDays(i));
             checklist.setChallenge(challenge);
             checklists.add(checklist);
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-        }
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Date endDate = calendar.getTime();
-        challenge.setEndDate(endDate);
+        });
 
+        challenge.setEndDate(endDate);
         challenge.setChecklists(checklists);
         challengeRepository.save(challenge);
         return challenge;
