@@ -23,26 +23,48 @@ const Checklist = () => {
   const [checklistId, setChecklistId] = useState(null)
 
   useEffect(() => {
-    const fetchDate = async () => {
-      try {
-        const response = await authApi.getCurrentChecklist(user)
-        setChecklistId(response.data.id)
-        setDate(response.data.date)
-      } catch (err) {
-        console.error(err)
+    const today = new Date().toISOString().split('T')[0];
+    const fetchedDate = localStorage.getItem('fetchedDate');
+    const isSubmitted = localStorage.getItem('submitted') === 'true';
+
+    if (fetchedDate === today && isSubmitted) {
+      setSubmitted(true);
+      const storedChecklist = localStorage.getItem('checklistData');
+      if (storedChecklist) {
+        const checklistData = JSON.parse(storedChecklist);
+        setDate(checklistData.date);
       }
+    } else {
+      fetchDate();
     }
-    fetchDate()
   }, [user])
+
+  const fetchDate = async () => {
+    try {
+      const response = await authApi.getCurrentChecklist(user)
+      setChecklistId(response.data.id)
+      setDate(response.data.date)
+
+      const today = new Date().toISOString.split('T')[0];
+      console.log(today)
+      localStorage.stItem('fetchedDate', today);
+      localStorage.setItem('checklistData', JSON.stringify(response.data))
+      localStorage.setItem('submitted', 'false')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+    
   console.log(date)
   console.log(checklistState)
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     try {
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
       console.log('checklist submission', response)
       setSubmitted(true)
+      localStorage.setItem('submitted', 'true')
     }
     catch (err) {
       console.error(err)
