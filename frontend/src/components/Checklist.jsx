@@ -9,7 +9,9 @@ const Checklist = () => {
   const user = Auth.user
   console.log(user.data.sub)
   
-  const [checklistState, setChecklistState] = useState({
+  const [checklistState, setChecklistState] = useState(() => {
+    const savedChecklist = localStorage.getItem('checklistState')
+    return savedChecklist ? JSON.parse(savedChecklist) : {
     workoutOne: false,
     workoutTwo: false,
     drinkWater: false,
@@ -17,6 +19,7 @@ const Checklist = () => {
     readTenPages: false,
     noCheatMeals: false,
     takePicture: false,
+    }
   })
   const [submitted, setSubmitted] = useState(false)
   const [date, setDate] = useState('')
@@ -27,18 +30,21 @@ const Checklist = () => {
     const fetchedDate = localStorage.getItem('fetchedDate');
     const isSubmitted = localStorage.getItem('submitted') === 'true';
     const submittedUser = localStorage.getItem('userSubmitted');
-//if user is different than submitted user, set submitted to false
-    if (fetchedDate === today && !isSubmitted) {
-      setSubmitted(true);
+  
+    if (user.data.sub !== submittedUser) {
+      fetchDate();
+      setSubmitted(false);
+    } else if (fetchedDate === today && isSubmitted) {
+      setSubmitted(true); 
+    } else {
+      fetchDate(); 
       const storedChecklist = localStorage.getItem('checklistData');
       if (storedChecklist) {
         const checklistData = JSON.parse(storedChecklist);
         setDate(checklistData.date);
       }
-    } else {
-      fetchDate();
     }
-  }, [user])
+  }, [user]);
 
   const fetchDate = async () => {
     try {
@@ -76,12 +82,15 @@ const Checklist = () => {
     const handleChecklistChange = (e, key) => {
       const updatedState = {...checklistState, [key]: e.target.checked}
       setChecklistState(updatedState)
+      countChecked(updatedState)
+      localStorage.setItem('checklistState', JSON.stringify(updatedState))
     }
 
-    const countChecked = () => {
-      return Object.values(checklistState).filter(value => value).length;
+    const countChecked = (updatedState) => {
+      const numberComplete = Object.values(updatedState).filter(value => value).length;
+      localStorage.setItem('numberCompleted', numberComplete)
     }
-    localStorage.setItem('numberCompleted', countChecked)
+    
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">

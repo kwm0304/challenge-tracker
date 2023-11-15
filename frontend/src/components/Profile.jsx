@@ -4,6 +4,7 @@ import { GrMail } from 'react-icons/gr'
 import { authApi } from "../api/authenticationService"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
+import { MdPlaylistAddCheck } from "react-icons/md"
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const Profile = () => {
   
   const isUser = user.data.rol[0] === 'USER';
   const [currentUser, setCurrentUser] = useState('');
-  
+  const [completed, setCompleted] = useState(0);
 
   useEffect(() => {
     if (!isUser) {
@@ -22,6 +23,10 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchProfileData() {
+      const numberCompleted = localStorage.getItem('numberCompleted');
+      setCompleted(numberCompleted);
+      
+      console.log("#", numberCompleted)
       try {
         const response = await authApi.getUserProfile(user);
         setCurrentUser(response.data);
@@ -48,6 +53,9 @@ const Profile = () => {
       <div></div>
       <GrMail className="text-amber-300 text-3xl mr-16"/>
       <p className="font-semibold text-xl text-cyan-400">{currentUser.email}</p>
+      <div></div>
+      <MdPlaylistAddCheck className="text-amber-300 text-4xl mr-14"/>
+      <div className="font-semibold text-xl text-cyan-400"> {completed}/7</div>
       <div></div>
       </div>
       )}
