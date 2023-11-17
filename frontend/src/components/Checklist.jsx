@@ -3,10 +3,12 @@ import ChecklistItem from "./ChecklistItem"
 import Gif from "./Gif"
 import { authApi } from "../api/authenticationService"
 import { useAuth } from "../context/AuthContext";
+import UploadImage from "./UploadImage";
 
 const Checklist = () => {
   const Auth = useAuth();
   const user = Auth.user
+  console.log(user)
   console.log(user.data.sub)
   
   const [checklistState, setChecklistState] = useState(() => {
@@ -24,7 +26,9 @@ const Checklist = () => {
   const [submitted, setSubmitted] = useState(false)
   const [date, setDate] = useState('')
   const [checklistId, setChecklistId] = useState(null)
+  console.log(checklistId)
 
+  //if not submitted for the day, fetch days list
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     const fetchedDate = localStorage.getItem('fetchedDate');
@@ -35,10 +39,12 @@ const Checklist = () => {
       fetchDate();
       setSubmitted(false);
     } else if (fetchedDate === today && isSubmitted) {
+      
       setSubmitted(true); 
     } else {
       fetchDate(); 
       const storedChecklist = localStorage.getItem('checklistData');
+      
       if (storedChecklist) {
         const checklistData = JSON.parse(storedChecklist);
         setDate(checklistData.date);
@@ -52,7 +58,6 @@ const Checklist = () => {
       console.log('response', response)
       setChecklistId(response.data.id)
       setDate(response.data.date)
-
       const today = new Date().toISOString().split('T')[0]; 
       console.log(today)
       localStorage.setItem('fetchedDate', today);
@@ -62,11 +67,13 @@ const Checklist = () => {
       console.error(err)
     }
   }
+  console.log(checklistId)
     
   console.log(date)
   console.log(checklistState)
   
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
     try {
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
@@ -86,6 +93,7 @@ const Checklist = () => {
       localStorage.setItem('checklistState', JSON.stringify(updatedState))
     }
 
+    //for local storage
     const countChecked = (updatedState) => {
       const numberComplete = Object.values(updatedState).filter(value => value).length;
       localStorage.setItem('numberCompleted', numberComplete)
@@ -106,6 +114,7 @@ const Checklist = () => {
           <ChecklistItem label="Read 10 Pages" value={checklistState.readTenPages} onChange={e => handleChecklistChange(e, 'readTenPages')} />
           <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeals} onChange={e => handleChecklistChange(e, 'noCheatMeals')} />
           <ChecklistItem label="Take Picture" value={checklistState.takePicture} onChange={e => handleChecklistChange(e, 'takePicture')} />
+          <UploadImage checklistId={checklistId} user={user} />
         </div>
         <div className='flex justify-center'>
         <button className='bg-green-600 text-lg uppercase text-white  font-semibold w-24 my-4 rounded-xl p-2'>Submit</button>

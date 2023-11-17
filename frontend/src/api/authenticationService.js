@@ -1,3 +1,4 @@
+import { parseJwt } from "../helpers";
 import { apiClient } from "./axios";
 
 function authenticate(username, password) {
@@ -48,6 +49,19 @@ function submitCurrentChecklist(user, checklist, checklistId) {
   })
 }
 
+export const submitImage = async (user, checklistId, formData) => {
+  try {
+    apiClient.post(`/api/checklist/current/${checklistId}/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': bearerAuth(user)
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 function bearerAuth(user) {
   return `Bearer ${user.accessToken}`
@@ -59,5 +73,18 @@ export const authApi = {
   getUserProfile,
   getUser,
   getCurrentChecklist,
-  submitCurrentChecklist
+  submitCurrentChecklist,
 }
+
+apiClient.interceptors.request.use(function (config) {
+  if (config.headers.Authorization) {
+    const token = config.headers.Authorization.split(' ')[1]
+    const data = parseJwt(token)
+    if (Date.now() > data.exp * 1000) {
+      window.location.href = '/login'
+    }
+  }
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+})

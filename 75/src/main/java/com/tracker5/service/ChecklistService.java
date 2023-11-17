@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -48,30 +49,21 @@ public class ChecklistService {
     //post image
 
     //get image
-    public void uploadChecklistImage(Long checklistId, MultipartFile file, Long imageId) throws IOException {
+    public void uploadChecklistImage(Long checklistId, MultipartFile file) throws IOException {
         //see if checklist exists
         if (!doesChecklistExist(checklistId)) {
             throw new ResourceNotFoundException("No checklist exists with that id");
         }
+        String imageId = UUID.randomUUID().toString();
+
         String key = "checklist-images/%s/%s".formatted(checklistId, imageId);
         try {
-            s3Service.putObject(s3Buckets.getUser(), key, file.getBytes());
+            s3Service.putObject(s3Buckets.getChecklist(), key, file.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image", e);
         }
 
-        String imageUrl = "https://"+s3Buckets.getUser() + ".s3" + awsRegion + ".amazon.com/" + key;
-        Checklist checklist = checklistRepository.findById(checklistId).orElseThrow(() ->
-                new ResourceNotFoundException("Checklist not found"));
-        Image image = checklist.getImage();
-        if (image == null) {
-            image = new Image();
-            image.setChecklist(checklist);
-            checklist.setImage(image);
-        }
-        image.setImageUrl(imageUrl);
-
-        checklistRepository.save(checklist);
+        checklistRepository.updateChecklistImageId(imageId, checklistId);
     }
 
     private boolean doesChecklistExist(Long checklistId) {

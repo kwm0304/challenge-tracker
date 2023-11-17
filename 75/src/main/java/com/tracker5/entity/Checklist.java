@@ -43,6 +43,5 @@ public class Checklist {
     @JsonIgnore
     private Challenge challenge;
 
-    @OneToOne(mappedBy = "checklist", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    private Image image;
+    private String imageId;
 }
