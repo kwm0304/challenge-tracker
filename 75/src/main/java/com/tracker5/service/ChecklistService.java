@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -85,5 +86,21 @@ public class ChecklistService {
         existingChecklist.setTakePicture(checklistDetails.getTakePicture());
         existingChecklist.setNoAlcohol(checklistDetails.getNoAlcohol());
         existingChecklist.setNoCheatMeals(checklistDetails.getNoCheatMeals());
+    }
+
+    public byte[] getChecklistImage(Long checklistId) {
+        Checklist checklist = checklistRepository.findById(checklistId)
+                .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
+
+        if (checklist.getImageId().isBlank()) {
+            throw new ResourceNotFoundException("Image not found");
+        }
+        String id = checklist.getImageId();
+
+        byte[] checklistImage = s3Service.getObject(
+                s3Buckets.getChecklist(),
+                "checklist-images/%s/%s".formatted(checklistId, id)
+        );
+        return checklistImage;
     }
 }

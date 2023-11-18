@@ -62,6 +62,10 @@ export const submitImage = async (user, checklistId, formData) => {
   }
 }
 
+export const checklistImageUrl = (checklistId) => {
+  `http://localhost:8080/api/checklist/current/${checklistId}/image`;
+}
+
 
 function bearerAuth(user) {
   return `Bearer ${user.accessToken}`
