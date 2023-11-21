@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,5 +27,11 @@ public class ChallengeController {
     public ResponseEntity<Challenge> createChallenge(@AuthenticationPrincipal UserDetailsImpl currentUser) {
         Challenge newChallenge = challengeService.createChallenge(currentUser.getId());
         return new ResponseEntity<>(newChallenge, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{userId}/images")
+    public ResponseEntity<List<String>> getAllChecklistImagesForUser(@PathVariable Long userId) {
+        List<String> imageIds = challengeService.getAllChecklistImagesForChallenge(userId);
+        return ResponseEntity.ok(imageIds);
     }
 }

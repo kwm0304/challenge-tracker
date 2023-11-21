@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -57,6 +58,18 @@ public class ChallengeService {
         return challengeRepository.findActiveChallengeByUserId(userId)
                 .map(ChallengeDto::getId)
                 .orElse(null);
+    }
 
+    public List<String> getAllChecklistImagesForChallenge(Long userId) {
+        Long activeChallengeId = userRepository.findActiveChallengeByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Challenge challenge = challengeRepository.findById(activeChallengeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Challenge not found"));
+
+        return challenge.getChecklists().stream()
+                .filter(checklist -> checklist.getImageId() != null && !checklist.getImageId().isBlank())
+                .map(Checklist::getImageId)
+                .collect(Collectors.toList());
     }
 }
