@@ -10,6 +10,16 @@ const Checklist = () => {
   const user = Auth.user
   
   const currentUser = user.sub
+  const prevUser = localStorage.getItem('lastModifiedUser')
+  const correctUser = currentUser === prevUser;
+
+  const today = new Date().toISOString().split('T')[0];
+  const fetchedDate = localStorage.getItem('fetchedDate');
+  const correctDate = today === fetchedDate;
+  console.log(correctDate)
+
+  
+
   const userSpecificSubmittedKey = `submitted_${currentUser}`;
   const userSpecificChecklistDataKey = `checklistData_${currentUser}`;
   console.log(user)
@@ -34,30 +44,22 @@ const Checklist = () => {
 
   //if not submitted for the day, fetch days list
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    const fetchedDate = localStorage.getItem('fetchedDate');
     const isSubmitted = localStorage.getItem(userSpecificSubmittedKey) === 'true';
     const checklistData = localStorage.getItem(userSpecificChecklistDataKey);
-    console.log('today', today)
-    console.log('fetcheddate', fetchedDate)
-    console.log(isSubmitted)
-    if (today !== fetchedDate) {
-      console.log('1')
-      
-      setSubmitted(false)
-      fetchDate()
-    } else if (checklistData && !isSubmitted) {
-      console.log(isSubmitted)
+    if ((!isSubmitted && checklistData) && correctUser && correctDate) {
       console.log('2')
       const storedChecklist = JSON.parse(checklistData)
       console.log('storedchecklist', storedChecklist)
       setDate(checklistData.date)
-    } else {
-      console.log('3')
-      setSubmitted(isSubmitted)
       setChecklistId(checklistData.id)
+      setSubmitted(isSubmitted)
+    } else if(!correctUser || !correctDate) {
+      console.log('1')
       fetchDate()
-    }
+      setSubmitted(false)
+      setChecklistId(null)
+      
+    } 
   }, [user, currentUser]);
 
   const fetchDate = async () => {
@@ -65,6 +67,7 @@ const Checklist = () => {
       const response = await authApi.getCurrentChecklist(user)
       console.log('response', response)
       setChecklistId(response.data.id)
+      console.log(checklistId)
       setDate(response.data.date)
       const today = new Date().toISOString().split('T')[0]; 
       localStorage.setItem('fetchedDate', today);
@@ -74,9 +77,29 @@ const Checklist = () => {
       console.error(err)
     }
   }
+
+  const resetState = () => {
+    setChecklistState({
+      workoutOne: false,
+      workoutTwo: false,
+      drinkWater: false,
+      noAlcohol: false,
+      readTenPages: false,
+      noCheatMeals: false,
+      takePicture: false,
+    });
+    setDate('');
+    setChecklistId(null);
+  };
+
+  const resetLocalStorage = () => {
+    localStorage.removeItem(userSpecificChecklistDataKey);
+    localStorage.setItem(userSpecificSubmittedKey, 'false');
+    localStorage.removeItem('lastModifiedUser');
+    localStorage.removeItem('numberCompleted');
+  };
   
   const handleSubmit = async (e) => {
-    
     e.preventDefault();
     try {
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
@@ -84,11 +107,14 @@ const Checklist = () => {
       setSubmitted(true)
       localStorage.setItem(userSpecificSubmittedKey, 'true')
       localStorage.setItem('userSubmitted', user.data.sub)
+      resetState();
+      resetLocalStorage();
     }
     catch (err) {
       console.error(err)
     }
   }
+  //1. changes 2. who makes changes
     const handleChecklistChange = (e, key) => {
       const updatedState = {...checklistState, [key]: e.target.checked}
       setChecklistState(updatedState)
@@ -108,7 +134,10 @@ const Checklist = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">
       {submitted ? <Gif /> : (
         <>
-      <p className="text-amber-300 text-3xl text center mt-8 font-bold">{date}</p>
+      <div className="grid grid-cols-2 items-center">
+        <UploadImage checklistId={checklistId} user={user} />
+        <p className="text-amber-300 text-3xl text center mt-8 font-bold">{date}</p>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-rows-7 gap-y-6 h-full px-2 w-96 text-center pt-4 items-center">
           <ChecklistItem label="Workout 1" value={checklistState.workoutOne} onChange={(e) => handleChecklistChange(e, "workoutOne")} />

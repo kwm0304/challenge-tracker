@@ -17,11 +17,10 @@ function UploadImage({ checklistId, user }) {
   const {getRootProps, getInputProps} = useDropzone({onDrop})
 
   return (
-    <FaCameraRetro className="text-amber-300 text-2xl ml-3"> 
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-      </div>
-    </FaCameraRetro>
+    <div {...getRootProps()} className="bg-blue-500 rounded-xl w-12 h-12 mt-10 flex items-center justify-center ">
+    <input {...getInputProps()} />
+    <FaCameraRetro className="text-white text-2xl" />
+  </div>
   )
 }
 

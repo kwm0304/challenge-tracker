@@ -43,13 +43,7 @@ public class ChecklistService {
         return checklistRepository.findByDateAndChallengeId(today, challengeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist for current date not found"));
     }
-    //post checklist
 
-    //update checklist
-
-    //post image
-
-    //get image
     public void uploadChecklistImage(Long checklistId, MultipartFile file) throws IOException {
         //see if checklist exists
         if (!doesChecklistExist(checklistId)) {
@@ -96,6 +90,7 @@ public class ChecklistService {
             throw new ResourceNotFoundException("Image not found");
         }
         String id = checklist.getImageId();
+        System.out.println(id);
 
         byte[] checklistImage = s3Service.getObject(
                 s3Buckets.getChecklist(),

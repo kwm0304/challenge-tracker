@@ -62,9 +62,7 @@ export const submitImage = async (user, checklistId, formData) => {
   }
 }
 
-export const checklistImageUrl = (checklistId) => {
-  `http://localhost:8080/api/checklist/current/${checklistId}/image`;
-}
+export const checklistImageUrl = (checklistId) => `http://localhost:8080/api/checklist/current/${checklistId}/image`;
 
 
 function bearerAuth(user) {
@@ -78,6 +76,7 @@ export const authApi = {
   getUser,
   getCurrentChecklist,
   submitCurrentChecklist,
+  
 }
 
 apiClient.interceptors.request.use(function (config) {

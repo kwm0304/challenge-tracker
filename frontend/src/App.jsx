@@ -7,6 +7,7 @@ import NavBar from './components/NavBar'
 import StartChallenge from './components/StartChallenge'
 import { AuthProvider } from './context/AuthContext'
 import Home from './components/Home'
+import Pictures from './components/Pictures'
 function App() {
   
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/pictures" element={<Pictures />} />
       </Routes>
       </Router>
       </AuthProvider>

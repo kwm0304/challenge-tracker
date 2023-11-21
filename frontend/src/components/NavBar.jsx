@@ -31,6 +31,9 @@ const NavBar = () => {
         <Link to="/checklist">
           <div className="">Checklist</div>
         </Link>
+        <Link to="/pictures">
+          <div className="">Pictures</div>
+        </Link>
         </div>
     </nav>
   )

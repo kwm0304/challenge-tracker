@@ -52,7 +52,8 @@ public class ChecklistController {
         checklistService.uploadChecklistImage(checklistId, file);
     }
 
-    @GetMapping(value = "/current{checklistId}/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/current/{checklistId}/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public byte[] getChecklistImage(@PathVariable("checklistId") Long checklistId) {
         return checklistService.getChecklistImage(checklistId);
     }
