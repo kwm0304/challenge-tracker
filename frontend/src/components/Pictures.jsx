@@ -11,39 +11,37 @@ const Pictures = () => {
   const checklistData = JSON.parse(checklistDataString)
   const checklistId = checklistData.id;
   console.log(checklistId)
-  const [picture, setPicture] = useState(null)
+  const [pictures, setPictures] = useState([])
   
 
   useEffect(() => {
-    axios.get(checklistImageUrl(checklistId), {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      responseType: 'blob'
+    axios.get(`http://localhost:8080/api/challenge/user/${user.id}/images`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
     })
     .then(response => {
-      const imageUrl = URL.createObjectURL(response.data)
-      setPicture(imageUrl)
+      const ids = response.data;
+      return Promise.all(ids.map(id => {
+        axios.get(checklistImageUrl(id), {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        responseType: 'blob'
+      }).then(res => URL.createObjectURL(res.data))
     })
-    .catch(error => {
-      console.error("Error fetching image", error)
-    })
-  }, [checklistId, accessToken])
+  })
+  .then(urls => {
+    setPictures(urls)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  }, [user, accessToken])
   return (
     <div className="min-h-screen bg-slate-800">
       <div className="grid grid-cols-3 gap-1 mx-1 text-white pt-24 justify-center text-center">
-      <div>
-        <img src={picture} 
-        className='w-full h-full'
-        />
-      </div>
-      <div>
-        <img src={pic}/>
-      </div>
-      <div>
-        <img src={pic}/>
-      </div>
-      
+        {pictures.map((url, index) => (
+          <div key={index}>
+            <img src={url} className='w-full h-full'/>
+          </div>
+        ))}
       </div>
     </div>
   )
