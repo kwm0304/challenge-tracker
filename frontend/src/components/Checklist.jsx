@@ -20,8 +20,8 @@ const Checklist = () => {
   })
 
   const [submitted, setSubmitted] = useState(false)
-  const [date, setDate] = useState('')
   const [checklistId, setChecklistId] = useState(null)
+  
   const dayNumber = localStorage.getItem('dayNumber')
   console.log('dayNumber', dayNumber)
 
@@ -30,11 +30,9 @@ const Checklist = () => {
     const fetchChecklistData = async () => {
       try {
         const response = await authApi.getCurrentChecklist(user);
-        console.log('response', response)
         setChecklistState({ ...response.data });
         setChecklistId(response.data.id)
         localStorage.setItem('checklistId', response.data.id)
-        setDate(response.data.date);
         setSubmitted(false);
       } catch (err) {
         console.error(err);
@@ -54,7 +52,6 @@ const Checklist = () => {
       takePicture: false,
       submitted: false,
     });
-    setDate('');
     setChecklistId(null);
   };
 
@@ -68,14 +65,13 @@ const Checklist = () => {
       setSubmitted(true);
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
       console.log('checklist submission', response)
-      
       resetState();
     }
     catch (err) {
       console.error(err)
     }
   }
-  //1. changes 2. who makes changes
+ 
     const handleChecklistChange = async (e, key) => {
       const updatedState = {...checklistState, [key]: e.target.checked}
       setChecklistState(updatedState)
@@ -93,11 +89,15 @@ const Checklist = () => {
       const numberComplete = Object.values(updatedState).filter(value => value).length;
       localStorage.setItem('numberCompleted', numberComplete)
     }
+    const allTaskChecked = localStorage.getItem('numberCompleted') === '9';
+    
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">
+      
       {submitted ? <Gif /> : (
         <>
+        
       <div className="grid grid-cols-3 items-center w-full px-6">
         <UploadImage checklistId={checklistId} user={user} />
         <p className="text-amber-300 text-4xl ml-2 text-center mt-9 font-bold"> DAY {dayNumber}</p>
@@ -113,9 +113,11 @@ const Checklist = () => {
           <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeals} onChange={e => handleChecklistChange(e, 'noCheatMeals')} />
           <ChecklistItem label="Take Picture" value={checklistState.takePicture} onChange={e => handleChecklistChange(e, 'takePicture')} />
         </div>
-        <div className='flex justify-center'>
-        <button className='bg-green-600 text-lg uppercase text-white  font-semibold w-24 my-4 rounded-xl p-2'>Submit</button>
-        </div>
+        {allTaskChecked && (
+          <div className="flex justify-center">
+            <button className="bg-green-600 text-lg uppercase text-white font-semibold w-24 my-4 rounded-xl p-2">Submit</button>
+          </div>
+        )}
       </form>
       </>
       )}

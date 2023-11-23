@@ -68,6 +68,8 @@ public class ChallengeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Challenge not found"));
 
         return challenge.getChecklists().stream()
+                .filter(checklist -> checklist.getSubmitted() != null && checklist.getSubmitted())
+                .filter(checklist -> checklist.getImageId() != null && !checklist.getImageId().isBlank())
                 .map(Checklist::getId)
                 .collect(Collectors.toList());
     }

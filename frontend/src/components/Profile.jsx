@@ -51,21 +51,20 @@ const Profile = () => {
     <div className="pt-12 min-h-screen bg-slate-600 px-4">
       <h1 className="text-amber-500 font-bold text-3xl">Profile</h1>
       {currentUser && (
-      <div className="grid grid-cols-3 justify-items-center mt-12 border-2 border-slate-400 rounded-xl p-2 bg-slate-800 gap-y-4">
+      <div className="grid grid-cols-2 justify-items-center mt-12 border-2 border-slate-400 rounded-xl p-2 bg-slate-800 gap-y-4">
         <BiSolidUserCircle className="text-amber-300 text-3xl mr-16"/>
-        
-        
-          <p className="font-semibold text-xl text-cyan-400">{currentUser.username}</p>
+        <p className="font-semibold text-xl text-cyan-400">{currentUser.username}</p>
       
-      <div></div>
+      
       <GrMail className="text-amber-300 text-3xl mr-16"/>
-      <p className="font-semibold text-xl text-cyan-400">{currentUser.email}</p>
-      <div></div>
+      <p className="font-semibold text-xl text-cyan-400">Change contact information</p>
+      
       <MdPlaylistAddCheck className="text-amber-300 text-4xl mr-14"/>
       <div className="font-semibold text-xl text-cyan-400"> {completed}/7</div>
-      <div></div>
+      
       </div>
       )}
+      <div className="bg-slate-800 w-full text-amber-300">Hello</div>
       <p>Access Token: token</p>
       <p>User Id: id</p>
       {currentUser && (
