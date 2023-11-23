@@ -12,13 +12,13 @@ public class UserDto {
     private String username;
     private String email;
     private String roles;
+    private int dayNumber;
 
-
-    public UserDto(Long id, String username, String email, String roles) {
+    public UserDto(Long id, String username, String email, String roles, int dayNumber) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles= roles;
-
+        this.dayNumber = dayNumber;
     }
 }

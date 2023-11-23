@@ -24,13 +24,19 @@ const Profile = () => {
   useEffect(() => {
     async function fetchProfileData() {
       const numberCompleted = localStorage.getItem('numberCompleted');
-      setCompleted(numberCompleted);
+      if (numberCompleted === null) {
+        setCompleted(0);
+        return;
+      }
+      setCompleted(numberCompleted - 2);
       
       console.log("#", numberCompleted)
       try {
         const response = await authApi.getUserProfile(user);
+        console.log('RES', response.data)
         setCurrentUser(response.data);
         localStorage.setItem('currentUser', JSON.stringify(response.data));
+        localStorage.setItem('dayNumber', response.data.dayNumber);
       } catch(err) {
         console.log(err);
       }

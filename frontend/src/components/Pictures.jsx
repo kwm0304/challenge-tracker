@@ -12,9 +12,9 @@ const Pictures = () => {
   console.log('userId', userId)
 
   const accessToken = user.accessToken;
-  const checklistDataString = localStorage.getItem('checklistData')
-  const checklistData = JSON.parse(checklistDataString)
-  const checklistId = checklistData.id;
+  const localChecklistId = localStorage.getItem('checklistId')
+  const parsedChecklistId = JSON.parse(localChecklistId)
+  const checklistId = parsedChecklistId;
   console.log(checklistId)
   const [pictures, setPictures] = useState([])
   

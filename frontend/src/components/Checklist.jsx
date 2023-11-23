@@ -22,7 +22,8 @@ const Checklist = () => {
   const [submitted, setSubmitted] = useState(false)
   const [date, setDate] = useState('')
   const [checklistId, setChecklistId] = useState(null)
-  
+  const dayNumber = localStorage.getItem('dayNumber')
+  console.log('dayNumber', dayNumber)
 
   //if not submitted for the day, fetch days list
   useEffect(() => {
@@ -32,6 +33,7 @@ const Checklist = () => {
         console.log('response', response)
         setChecklistState({ ...response.data });
         setChecklistId(response.data.id)
+        localStorage.setItem('checklistId', response.data.id)
         setDate(response.data.date);
         setSubmitted(false);
       } catch (err) {
@@ -91,9 +93,10 @@ const Checklist = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">
       {submitted ? <Gif /> : (
         <>
-      <div className="grid grid-cols-2 items-center">
+      <div className="grid grid-cols-3 items-center w-full px-6">
         <UploadImage checklistId={checklistId} user={user} />
-        <p className="text-amber-300 text-3xl text center mt-8 font-bold">{date}</p>
+        <p className="text-amber-300 text-4xl ml-2 text-center mt-9 font-bold"> DAY {dayNumber}</p>
+        <div></div>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-rows-7 gap-y-6 h-full px-2 w-96 text-center pt-4 items-center">

@@ -27,8 +27,12 @@ public class UserMapperImpl implements UserMapper {
                 .filter(Challenge::isActive).findFirst()
                 .map(this::toChallengeDto)
                 .orElse(null);
+        int dayNumber = 0;
+        if (activeChallengeDto != null) {
+            dayNumber = activeChallengeDto.getDayNumber();
+        }
 
-        return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoles());
+        return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoles(), dayNumber);
     }
 
     private ChallengeDto toChallengeDto(Challenge challenge) {

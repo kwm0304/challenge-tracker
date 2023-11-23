@@ -7,22 +7,18 @@ import { parseJwt } from '../helpers';
 
 const Login = () => {
   const Auth = useAuth();
-  const isLoggedIn = Auth.userIsAuthenticated();
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate();
   
- 
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await authApi.authenticate(username, password)
       const { accessToken, hasActiveChallenge } = response.data;
-      console.log(accessToken)
-      console.log(response)
+      
       const data = parseJwt(accessToken);
       const authenticatedUser = { data, accessToken };
 
@@ -30,14 +26,10 @@ const Login = () => {
       setUsername('');
       setPassword('');
 
-      return navigate(hasActiveChallenge ? '/checklist' : '/start')
+      return navigate(hasActiveChallenge ? '/profile' : '/start')
     } catch (error) {
       console.log(error)
     }
-  }
-  if (isLoggedIn) {
-    console.log("logged in")
-    return navigate('/profile')
   }
 
 const formInputClass = "w-full px-3 py-2 text-gray-700 border rounded-lg  focus:border-blue-500 ";
