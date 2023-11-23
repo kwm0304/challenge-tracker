@@ -71,6 +71,13 @@ function updateUserInfo(user, contactInfo, userId) {
   })
 }
 
+function getStartAndEndPics(user, userId) {
+  return apiClient.get(`/api/challenge/${userId}/images/first-last`, {
+    headers: { 'Authorization': bearerAuth(user)},
+    responseType: 'blob'
+  })
+}
+
 // export const getImage = async (user, checklistId ) => {
 //  apiClient.get(checklistImageUrl(checklistId), {
 //   headers: {
@@ -101,7 +108,8 @@ export const authApi = {
   getUser,
   getCurrentChecklist,
   submitCurrentChecklist,
-  updateUserInfo
+  updateUserInfo,
+  getStartAndEndPics
 }
 
 apiClient.interceptors.request.use(function (config) {

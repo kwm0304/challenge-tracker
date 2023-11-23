@@ -88,9 +88,9 @@ public class ChallengeService {
             throw new AppException("No images found for this challenge", HttpStatus.OK);
             }
             List<Long> checklistIds = new ArrayList<>();
-            checklistIds.add(submittedChecklists.get(0).getId());
+            checklistIds.add(submittedChecklists.get(0).getId()); //first image
             if (submittedChecklists.size() > 1) {
-                checklistIds.add(submittedChecklists.get(submittedChecklists.size() - 1).getId());
+                checklistIds.add(submittedChecklists.get(submittedChecklists.size() - 1).getId()); //last image
             }
             return checklistIds;
     }
