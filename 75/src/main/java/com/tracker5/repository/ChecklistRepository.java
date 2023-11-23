@@ -21,5 +21,5 @@ public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     @Query("UPDATE Checklist c SET c.imageId = ?1 WHERE c.id = ?2")
     void updateChecklistImageId(String imageId, Long checklistId);
 
-    List<Checklist> findUnsubmittedChecklistsForDate(LocalDate today);
+    List<Checklist> findByDateAndSubmitted(LocalDate date, boolean submitted);
 }

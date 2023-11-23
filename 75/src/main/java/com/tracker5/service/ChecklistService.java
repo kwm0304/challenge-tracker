@@ -1,10 +1,7 @@
 package com.tracker5.service;
 
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
-import com.tracker5.entity.Challenge;
 import com.tracker5.entity.Checklist;
-import com.tracker5.entity.Image;
-import com.tracker5.exception.AppException;
 import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.ChecklistRepository;
 import com.tracker5.s3.S3Buckets;
@@ -12,17 +9,14 @@ import com.tracker5.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -101,16 +95,14 @@ public class ChecklistService {
         return checklistImage;
     }
 
+    @Scheduled(cron = "0 59 23 * * *")
     public void autoSubmitChecklist() {
-        //find all unsubmitted checklists
         LocalDate today = LocalDate.now();
-        List<Checklist> unsubmittedChecklists = checklistRepository.findUnsubmittedChecklistsForDate(today);
+        List<Checklist> unsubmittedChecklists = checklistRepository.findByDateAndSubmitted(today, false);
 
         for (Checklist checklist : unsubmittedChecklists) {
             checklist.setSubmitted(true);
-
             updateChecklist(checklist.getId(), checklist);
         }
-        //for each, submit with it's current values
     }
 }
