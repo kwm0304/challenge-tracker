@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Pictures from './components/Pictures'
 import Home from './components/Home'
 import UpdateContact from './components/UpdateContact'
+import ChallengeComplete from './components/ChallengeComplete'
 function App() {
   
 
@@ -39,6 +40,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/pictures" element={<Pictures />} />
         <Route path="/update" element={<UpdateContact/>} />
+        <Route path="/complete" element={<ChallengeComplete/>} />
       </Routes>
     </>
   )

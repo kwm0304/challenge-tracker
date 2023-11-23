@@ -16,7 +16,7 @@ const NavBar = () => {
 
   return (
     <nav className="p-2 px-4 h-20 fixed top-0  w-screen flex justify-between items-center bg-slate-800 text-white">
-      <button onClick={logout} className='font-semibold uppercase text-white bg-red-500 cursor-pointer  rounded-lg p-2 focus:bg-amber-500 focus:text-white focus:scale-125 transform transition hover:scale-105 duration-300 ease-in-out'>
+      <button onClick={logout} className='font-bold uppercase text-slate-800 bg-amber-400 cursor-pointer  rounded-lg p-2 focus:bg-amber-500 focus:text-white focus:scale-125 transform transition hover:scale-105 duration-300 ease-in-out'>
         <Link to="/">Logout</Link>
       </button>
       <div className="flex space-x-4 font-semibold">

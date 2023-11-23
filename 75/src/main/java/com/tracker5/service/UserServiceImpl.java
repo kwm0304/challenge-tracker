@@ -74,14 +74,6 @@ public class UserServiceImpl implements UserService {
 
         boolean changes = false;
 
-        if (updatedUser.username() != null && !updatedUser.username().equals(user.getUsername())) {
-            if (userRepository.existsByUsername(updatedUser.username())) {
-                throw new AppException("Username already in use", HttpStatus.BAD_REQUEST);
-            }
-            user.setUsername(updatedUser.username());
-            changes = true;
-        }
-
         if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
             if (userRepository.existsByEmail(updatedUser.email())) {
                 throw new AppException("Email already in use", HttpStatus.BAD_REQUEST);

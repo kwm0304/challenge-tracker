@@ -5,10 +5,12 @@ import com.tracker5.dto.ChallengeDto;
 import com.tracker5.entity.Challenge;
 import com.tracker5.entity.Checklist;
 import com.tracker5.entity.User;
+import com.tracker5.exception.AppException;
 import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.ChecklistRepository;
 import com.tracker5.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -73,5 +75,23 @@ public class ChallengeService {
         return checklists.stream()
                 .map(Checklist::getId)
                 .collect(Collectors.toList());
+    }
+
+    public List<String> getFirstAndLastImages(Long challengeId) {
+        List<Checklist> submittedChecklist = checklistRepository
+                .findSubmittedChecklistWithImageByChallengeId(challengeId)
+                .stream()
+                .sorted(Comparator.comparing(Checklist::getDate))
+                .toList();
+
+        if (submittedChecklist.isEmpty()) {
+            throw new AppException("No images found for this challenge", HttpStatus.OK);
+            }
+            List<String> imageIds = new ArrayList<>();
+            imageIds.add(submittedChecklist.get(0).getImageId());
+            if (submittedChecklist.size() > 1) {
+                imageIds.add(submittedChecklist.get(submittedChecklist.size() - 1).getImageId());
+            }
+            return imageIds;
     }
 }

@@ -1,6 +1,8 @@
 package com.tracker5.controller;
 
+import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.tracker5.entity.Challenge;
+import com.tracker5.repository.UserRepository;
 import com.tracker5.security.UserDetailsImpl;
 import com.tracker5.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ import java.util.List;
 public class ChallengeController {
     @Autowired
     private ChallengeService challengeService;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -35,5 +39,13 @@ public class ChallengeController {
         System.out.println("Received userId: " + userId);
         List<Long> checklistIds = challengeService.getAllChecklistImagesForChallenge(userId);
         return ResponseEntity.ok(checklistIds);
+    }
+
+    @GetMapping("/{userId}/images/first-last")
+    public ResponseEntity<List<String>> getFirstAndLastImages(@PathVariable Long userId) {
+        Long challengeId = userRepository.findActiveChallengeByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        List<String> images = challengeService.getFirstAndLastImages(challengeId);
+        return ResponseEntity.ok(images);
     }
 }
