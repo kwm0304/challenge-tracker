@@ -17,7 +17,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!isUser) {
-      navigate('/login');
+      navigate('/');
     }
   }, [isUser, navigate]);
 
@@ -30,6 +30,7 @@ const Profile = () => {
       try {
         const response = await authApi.getUserProfile(user);
         setCurrentUser(response.data);
+        localStorage.setItem('currentUser', JSON.stringify(response.data));
       } catch(err) {
         console.log(err);
       }

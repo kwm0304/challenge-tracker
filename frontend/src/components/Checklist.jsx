@@ -9,25 +9,7 @@ const Checklist = () => {
   const Auth = useAuth();
   const user = Auth.user
   
-  const currentUser = user.sub
-  const prevUser = localStorage.getItem('lastModifiedUser')
-  const correctUser = currentUser === prevUser;
-
-  const today = new Date().toISOString().split('T')[0];
-  const fetchedDate = localStorage.getItem('fetchedDate');
-  const correctDate = today === fetchedDate;
-  console.log(correctDate)
-
-  
-
-  const userSpecificSubmittedKey = `submitted_${currentUser}`;
-  const userSpecificChecklistDataKey = `checklistData_${currentUser}`;
-  console.log(user)
-  console.log(user.data.sub)
-  
-  const [checklistState, setChecklistState] = useState(() => {
-    const savedChecklist = localStorage.getItem('checklistState')
-    return savedChecklist ? JSON.parse(savedChecklist) : {
+  const [checklistState, setChecklistState] = useState({
     workoutOne: false,
     workoutTwo: false,
     drinkWater: false,
@@ -35,8 +17,8 @@ const Checklist = () => {
     readTenPages: false,
     noCheatMeals: false,
     takePicture: false,
-    }
   })
+
   const [submitted, setSubmitted] = useState(false)
   const [date, setDate] = useState('')
   const [checklistId, setChecklistId] = useState(null)
@@ -44,39 +26,19 @@ const Checklist = () => {
 
   //if not submitted for the day, fetch days list
   useEffect(() => {
-    const isSubmitted = localStorage.getItem(userSpecificSubmittedKey) === 'true';
-    const checklistData = localStorage.getItem(userSpecificChecklistDataKey);
-    if ((!isSubmitted && checklistData) && correctUser && correctDate) {
-      console.log('2')
-      const storedChecklist = JSON.parse(checklistData)
-      console.log('storedchecklist', storedChecklist)
-      setDate(checklistData.date)
-      setChecklistId(checklistData.id)
-      setSubmitted(isSubmitted)
-    } else if(!correctUser || !correctDate) {
-      console.log('1')
-      fetchDate()
-      setSubmitted(false)
-      setChecklistId(null)
-      
-    } 
-  }, [user, currentUser]);
-
-  const fetchDate = async () => {
-    try {
-      const response = await authApi.getCurrentChecklist(user)
-      console.log('response', response)
-      setChecklistId(response.data.id)
-      console.log(checklistId)
-      setDate(response.data.date)
-      const today = new Date().toISOString().split('T')[0]; 
-      localStorage.setItem('fetchedDate', today);
-      localStorage.setItem('checklistData', JSON.stringify(response.data))
-      localStorage.setItem('submitted', 'false')
-    } catch (err) {
-      console.error(err)
+    const fetchChecklistData = async () => {
+      try {
+        const response = await authApi.getCurrentChecklist(user);
+        setChecklistState(...response.data);
+        setChecklistId(response.data.id)
+        setDate(response.data.date);
+        setSubmitted(false);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
+    fetchChecklistData();
+  }, [user]);
 
   const resetState = () => {
     setChecklistState({
@@ -92,12 +54,6 @@ const Checklist = () => {
     setChecklistId(null);
   };
 
-  const resetLocalStorage = () => {
-    localStorage.removeItem(userSpecificChecklistDataKey);
-    localStorage.setItem(userSpecificSubmittedKey, 'false');
-    localStorage.removeItem('lastModifiedUser');
-    localStorage.removeItem('numberCompleted');
-  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,22 +61,23 @@ const Checklist = () => {
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
       console.log('checklist submission', response)
       setSubmitted(true)
-      localStorage.setItem(userSpecificSubmittedKey, 'true')
-      localStorage.setItem('userSubmitted', user.data.sub)
       resetState();
-      resetLocalStorage();
     }
     catch (err) {
       console.error(err)
     }
   }
   //1. changes 2. who makes changes
-    const handleChecklistChange = (e, key) => {
+    const handleChecklistChange = async (e, key) => {
       const updatedState = {...checklistState, [key]: e.target.checked}
       setChecklistState(updatedState)
       countChecked(updatedState)
-      localStorage.setItem(userSpecificChecklistDataKey, JSON.stringify(updatedState))
-      localStorage.setItem('lastModifiedUser', currentUser)
+      try {
+        await authApi.submitCurrentChecklist(user, updatedState, checklistId);
+        console.log("Checklist updated")
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     //for local storage
@@ -128,7 +85,6 @@ const Checklist = () => {
       const numberComplete = Object.values(updatedState).filter(value => value).length;
       localStorage.setItem('numberCompleted', numberComplete)
     }
-    console.log('data', date)
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-600">

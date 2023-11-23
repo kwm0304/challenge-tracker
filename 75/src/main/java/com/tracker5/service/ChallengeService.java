@@ -60,7 +60,7 @@ public class ChallengeService {
                 .orElse(null);
     }
 
-    public List<String> getAllChecklistImagesForChallenge(Long userId) {
+    public List<Long> getAllChecklistImagesForChallenge(Long userId) {
         Long activeChallengeId = userRepository.findActiveChallengeByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -68,8 +68,7 @@ public class ChallengeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Challenge not found"));
 
         return challenge.getChecklists().stream()
-                .filter(checklist -> checklist.getImageId() != null && !checklist.getImageId().isBlank())
-                .map(Checklist::getImageId)
+                .map(Checklist::getId)
                 .collect(Collectors.toList());
     }
 }

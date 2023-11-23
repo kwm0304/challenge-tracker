@@ -86,7 +86,7 @@ public class ChecklistService {
         Checklist checklist = checklistRepository.findById(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
 
-        if (checklist.getImageId().isBlank()) {
+        if (checklist.getImageId() == null || checklist.getImageId().isBlank()) {
             throw new ResourceNotFoundException("Image not found");
         }
         String id = checklist.getImageId();

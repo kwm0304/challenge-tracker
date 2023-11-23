@@ -30,8 +30,10 @@ public class ChallengeController {
     }
 
     @GetMapping("/{userId}/images")
-    public ResponseEntity<List<String>> getAllChecklistImagesForUser(@PathVariable Long userId) {
-        List<String> imageIds = challengeService.getAllChecklistImagesForChallenge(userId);
-        return ResponseEntity.ok(imageIds);
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<Long>> getAllChecklistImagesForUser(@PathVariable Long userId) {
+        System.out.println("Received userId: " + userId);
+        List<Long> checklistIds = challengeService.getAllChecklistImagesForChallenge(userId);
+        return ResponseEntity.ok(checklistIds);
     }
 }
