@@ -32,8 +32,10 @@ public class AuthenticationController {
     @PostMapping("/signin")
     public AuthResponse login(@RequestBody LoginDto loginDto) {
         String token = getToken(loginDto.getUsername(), loginDto.getPassword());
+        User user = userService.findByUsername(loginDto.getUsername());
+        boolean hasActiveChallenge = user.isHasActiveChallenge();
         System.out.println(token);
-        return new AuthResponse(token);
+        return new AuthResponse(token, hasActiveChallenge);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,10 +47,11 @@ public class AuthenticationController {
                 if (userService.hasUserWithEmail(signUpDto.getEmail())) {
                     throw new AppException("Email already exists", HttpStatus.BAD_REQUEST);
                 }
-                userService.saveUser(mapSignUpDtoToUser(signUpDto));
+                User newUser = userService.saveUser(mapSignUpDtoToUser(signUpDto));
+                boolean hasActiveChallenge = newUser.isHasActiveChallenge();
 
                 String token = getToken(signUpDto.getUsername(), signUpDto.getPassword());
-                return new AuthResponse(token);
+                return new AuthResponse(token, hasActiveChallenge);
     }
 
     private String getToken(String username, String password) {

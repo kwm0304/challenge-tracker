@@ -23,7 +23,7 @@ const Signup = () => {
       const authenticatedUser = { data, accessToken };
 
       Auth.userLogin(authenticatedUser);
-      navigate('/checklist');
+      navigate('/start');
       setUsername('');
       setEmail('');
       setPassword('');

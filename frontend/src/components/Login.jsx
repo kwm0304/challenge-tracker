@@ -20,16 +20,17 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await authApi.authenticate(username, password)
-      const { accessToken } = response.data;
+      const { accessToken, hasActiveChallenge } = response.data;
       console.log(accessToken)
       console.log(response)
       const data = parseJwt(accessToken);
       const authenticatedUser = { data, accessToken };
-      console.log(authenticatedUser)
 
       Auth.userLogin(authenticatedUser);
       setUsername('');
       setPassword('');
+
+      return navigate(hasActiveChallenge ? '/checklist' : '/start')
     } catch (error) {
       console.log(error)
     }
@@ -70,6 +71,7 @@ const formInputClass = "w-full px-3 py-2 text-gray-700 border rounded-lg  focus:
             className={formInputClass}
             />
         </div>
+        <p className='text-slate-400 mt-4'>Don't have an account? <a href='/signup' className='text-amber-500'>Signup</a></p>
         <div className='flex justify-center'>
         <button className='bg-green-600 text-lg uppercase text-white  font-semibold w-24 my-4 rounded-xl p-2'>Submit</button>
         </div>

@@ -17,5 +17,7 @@ public interface UserService {
     User saveUser(User user);
     void deleteUser(User user);
 
+    User findByUsername(String username);
+
     Optional<Long> getActiveChallenge(Long userId);
 }

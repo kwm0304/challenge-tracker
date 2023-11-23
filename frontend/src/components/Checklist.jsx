@@ -29,7 +29,8 @@ const Checklist = () => {
     const fetchChecklistData = async () => {
       try {
         const response = await authApi.getCurrentChecklist(user);
-        setChecklistState(...response.data);
+        console.log('response', response)
+        setChecklistState({ ...response.data });
         setChecklistId(response.data.id)
         setDate(response.data.date);
         setSubmitted(false);

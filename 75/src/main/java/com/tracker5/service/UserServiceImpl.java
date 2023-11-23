@@ -1,5 +1,6 @@
 package com.tracker5.service;
 
+import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
 import com.tracker5.repository.UserRepository;
@@ -50,6 +51,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override

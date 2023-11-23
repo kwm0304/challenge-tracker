@@ -1,4 +1,16 @@
 package com.tracker5.dto;
 
-public record AuthResponse(String accessToken) {
+import lombok.Getter;
+
+@Getter
+public class AuthResponse {
+    private final String accessToken;
+    private final boolean hasActiveChallenge;
+
+    public AuthResponse(String accessToken, boolean hasActiveChallenge) {
+        this.accessToken = accessToken;
+        this.hasActiveChallenge = hasActiveChallenge;
+    }
+
+
 }
