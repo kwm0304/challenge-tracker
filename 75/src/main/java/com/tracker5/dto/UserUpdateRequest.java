@@ -1,4 +1,4 @@
 package com.tracker5.dto;
 
-public record UserUpdateRequest(String username, String email, String password) {
+public record UserUpdateRequest(String username, String email) {
 }

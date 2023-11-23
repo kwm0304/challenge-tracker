@@ -62,6 +62,15 @@ export const submitImage = async (user, checklistId, formData) => {
   }
 }
 
+function updateUserInfo(user, contactInfo, userId) {
+  return apiClient.put(`/api/users/update/${userId}`, contactInfo, {
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': bearerAuth(user)
+    }
+  })
+}
+
 // export const getImage = async (user, checklistId ) => {
 //  apiClient.get(checklistImageUrl(checklistId), {
 //   headers: {
@@ -92,7 +101,7 @@ export const authApi = {
   getUser,
   getCurrentChecklist,
   submitCurrentChecklist,
-  
+  updateUserInfo
 }
 
 apiClient.interceptors.request.use(function (config) {
