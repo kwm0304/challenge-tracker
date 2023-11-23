@@ -4,9 +4,11 @@ const UpdateContact = () => {
   const userData = localStorage.getItem('currentUser');
   const userId = userData.id;
 
-  const updatedEmail
+  const updatedEmail = ''
   return (
-    <div>UpdateContact</div>
+    <div className='bg-slate-600 min-h-screen'>
+
+    </div>
   )
 }
 

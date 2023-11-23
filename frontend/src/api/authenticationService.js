@@ -62,21 +62,21 @@ export const submitImage = async (user, checklistId, formData) => {
   }
 }
 
-export const getImage = async (user, checklistId ) => {
- apiClient.get(checklistImageUrl(checklistId), {
-  headers: {
-    'Authorization': bearerAuth(user)
-  },
-  responseType: 'blob'
-})
-.then(response => {
-  const imageUrl = URL.createObjectURL(response.data)
-  setPicture(imageUrl)
-})
-.catch(error => {
-  console.error("Error fetching image", error)
-})
-}
+// export const getImage = async (user, checklistId ) => {
+//  apiClient.get(checklistImageUrl(checklistId), {
+//   headers: {
+//     'Authorization': bearerAuth(user)
+//   },
+//   responseType: 'blob'
+// })
+// .then(response => {
+//   const imageUrl = URL.createObjectURL(response.data)
+//   // setPicture(imageUrl)
+// })
+// .catch(error => {
+//   console.error("Error fetching image", error)
+// })
+// }
 
 export const checklistImageUrl = (checklistId) => `http://localhost:8080/api/checklist/current/${checklistId}/image`;
 
@@ -100,7 +100,7 @@ apiClient.interceptors.request.use(function (config) {
     const token = config.headers.Authorization.split(' ')[1]
     const data = parseJwt(token)
     if (Date.now() > data.exp * 1000) {
-      window.location.href = '/'
+      window.location.href = '/login'
     }
   }
   return config;

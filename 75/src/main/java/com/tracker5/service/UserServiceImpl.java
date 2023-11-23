@@ -1,10 +1,13 @@
 package com.tracker5.service;
 
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
+import com.tracker5.dto.UserUpdateRequest;
 import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
+import com.tracker5.exception.AppException;
 import com.tracker5.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +65,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<Long> getActiveChallenge(Long userId) {
         return userRepository.findActiveChallengeByUserId(userId);
+    }
+
+    @Override
+    public void updateUser(Long userId, UserUpdateRequest updatedUser) throws UsernameNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        boolean changes = false;
+
+        if (updatedUser.username() != null && !updatedUser.username().equals(user.getUsername())) {
+            user.setUsername(updatedUser.username());
+            changes = true;
+        }
+
+        if (updatedUser.email() != null && !updatedUser.email().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(updatedUser.email())) {
+                throw new AppException("Email already in use", HttpStatus.BAD_REQUEST);
+            }
+            user.setEmail(updatedUser.email());
+            changes = true;
+        }
+
+        if (updatedUser.password() != null && !updatedUser.password().equals(user.getPassword())) {
+            user.setPassword(updatedUser.password());
+            changes = true;
+        }
+
+        if (!changes) {
+            throw new ResourceNotFoundException("No changes found");
+        }
+        userRepository.save(user);
     }
 
 

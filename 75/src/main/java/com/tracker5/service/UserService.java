@@ -1,5 +1,6 @@
 package com.tracker5.service;
 
+import com.tracker5.dto.UserUpdateRequest;
 import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
 
@@ -20,4 +21,6 @@ public interface UserService {
     User findByUsername(String username);
 
     Optional<Long> getActiveChallenge(Long userId);
+
+    void updateUser(Long userId, UserUpdateRequest updatedUser);
 }

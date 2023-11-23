@@ -4,48 +4,61 @@ const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser);
+    updateAuthStatus(storedUser);
   }, [])
 
+  const updateAuthStatus = (storedUser) => {
+    if (!storedUser || (Date.now() > storedUser.data.exp * 1000)) {
+      userLogout();
+      setIsAuthenticated(false);
+  } else {
+    setIsAuthenticated(true);
+  }
+  }
   const getUser = () => {
     return JSON.parse(localStorage.getItem("user"));
   }
 
-  const userIsAuthenticated = () => {
-    let storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      userLogout();
-      return false;
-    }
-    storedUser = JSON.parse(storedUser);
-    console.log(storedUser)
+  // const userIsAuthenticated = () => {
+  //   let storedUser = localStorage.getItem("user");
+  //   if (!storedUser) {
+  //     userLogout();
+  //     return false;
+  //   }
+  //   storedUser = JSON.parse(storedUser);
+  //   console.log(storedUser)
 
-    if (Date.now() > storedUser.data.exp * 1000) {
-      userLogout();
-      return false;
-    }
-    return true;
+  //   if (Date.now() > storedUser.data.exp * 1000) {
+  //     userLogout();
+  //     return false;
+  //   }
+  //   return true;
     
-  }
+  // }
 
   const userLogin = user => {
     localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
+    updateAuthStatus(user);
     console.log(user)
   }
 
   const userLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
+    setIsAuthenticated(false);
   }
 
   const authContextValue = {
     user,
     getUser,
-    userIsAuthenticated,
+    isAuthenticated,
+    updateAuthStatus,
     userLogin,
     userLogout
   };

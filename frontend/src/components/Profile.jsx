@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
-import {BiSolidUserCircle} from 'react-icons/bi'
+import { FaStar } from "react-icons/fa6";
+import { ImRedo2 } from 'react-icons/im'
 import { GrMail } from 'react-icons/gr'
 import { authApi } from "../api/authenticationService"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { MdPlaylistAddCheck } from "react-icons/md"
+import { Link } from "react-router-dom"
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -48,21 +50,31 @@ const Profile = () => {
   
 
   return (
-    <div className="pt-12 min-h-screen bg-slate-600 px-4">
-      <h1 className="text-amber-500 font-bold text-3xl">Profile</h1>
+    <div className="pt-12 min-h-screen bg-slate-600 px-4 flex flex-col pt-24">
       {currentUser && (
-      <div className="grid grid-cols-2 justify-items-center mt-12 border-2 border-slate-400 rounded-xl p-2 bg-slate-800 gap-y-4">
-        <BiSolidUserCircle className="text-amber-300 text-3xl mr-16"/>
-        <p className="font-semibold text-xl text-cyan-400">{currentUser.username}</p>
-      
-      
-      <GrMail className="text-amber-300 text-3xl mr-16"/>
-      <p className="font-semibold text-xl text-cyan-400">Change contact information</p>
-      
-      <MdPlaylistAddCheck className="text-amber-300 text-4xl mr-14"/>
-      <div className="font-semibold text-xl text-cyan-400"> {completed}/7</div>
-      
-      </div>
+        <>
+        <h1 className="text-amber-300 text-center text-4xl font-bold pb-12">{currentUser.username}</h1>
+        <div className="flex items-center px-4 justify-between">
+          
+        <GrMail className="text-amber-300 text-3xl mr-16"><a href="/update"/></GrMail>
+        <p className="font-semibold text-xl text-cyan-400"><a href="/update">Change contact information</a></p>
+        
+        </div>
+        <div className="flex items-center px-4 pt-6 justify-between">
+        <MdPlaylistAddCheck className="text-amber-300 text-5xl mr-14"/>
+        <p className="font-semibold text-xl text-cyan-400 "> Daily tasks: <a className="text-amber-300 font-semibold text-xl">{completed}/7</a></p>
+        </div>
+        <div className="flex items-center px-4 pt-6 justify-between">
+          <FaStar className="text-amber-300 text-3xl"/>
+          <p className="font-semibold text-xl text-cyan-400 "> Current streak: <a className="text-amber-300 font-semibold text-xl">69</a></p>
+        </div>
+        <div className="flex items-center justify-between px-4 pt-6">
+          <Link to="/restart">
+          <ImRedo2 className="text-3xl text-amber-300"/>
+          </Link>
+          <p className='font-semibold text-xl text-cyan-400 '>Start challenge over </p>
+        </div>
+        </>
       )}
       <div className="bg-slate-800 w-full text-amber-300">Hello</div>
       <p>Access Token: token</p>
