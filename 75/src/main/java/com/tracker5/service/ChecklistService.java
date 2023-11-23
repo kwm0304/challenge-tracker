@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -80,6 +81,7 @@ public class ChecklistService {
         existingChecklist.setTakePicture(checklistDetails.getTakePicture());
         existingChecklist.setNoAlcohol(checklistDetails.getNoAlcohol());
         existingChecklist.setNoCheatMeals(checklistDetails.getNoCheatMeals());
+        existingChecklist.setSubmitted(checklistDetails.getSubmitted());
     }
 
     public byte[] getChecklistImage(Long checklistId) {
@@ -97,5 +99,18 @@ public class ChecklistService {
                 "checklist-images/%s/%s".formatted(checklistId, id)
         );
         return checklistImage;
+    }
+
+    public void autoSubmitChecklist() {
+        //find all unsubmitted checklists
+        LocalDate today = LocalDate.now();
+        List<Checklist> unsubmittedChecklists = checklistRepository.findUnsubmittedChecklistsForDate(today);
+
+        for (Checklist checklist : unsubmittedChecklists) {
+            checklist.setSubmitted(true);
+
+            updateChecklist(checklist.getId(), checklist);
+        }
+        //for each, submit with it's current values
     }
 }

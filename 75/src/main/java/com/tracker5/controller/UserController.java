@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-//    @GetMapping("/profile/{userId}")
-//    public ResponseEntity<ChallengeDto> getProfile(@PathVariable(name = "userId") Long userId) {
-//
-//    }
+
     private final UserService userService;
     private final UserMapper userMapper;
 

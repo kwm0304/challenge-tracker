@@ -44,4 +44,6 @@ public class Checklist {
     private Challenge challenge;
 
     private String imageId;
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean submitted;
 }

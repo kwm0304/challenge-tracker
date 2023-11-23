@@ -16,7 +16,7 @@ const Checklist = () => {
     noAlcohol: false,
     readTenPages: false,
     noCheatMeals: false,
-    takePicture: false,
+    takePicture: false
   })
 
   const [submitted, setSubmitted] = useState(false)
@@ -52,6 +52,7 @@ const Checklist = () => {
       readTenPages: false,
       noCheatMeals: false,
       takePicture: false,
+      submitted: false,
     });
     setDate('');
     setChecklistId(null);
@@ -60,10 +61,14 @@ const Checklist = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
+      const updatedChecklistState = { ...checklistState, submitted: true };
+      setChecklistState(updatedChecklistState);
+      setSubmitted(true);
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
       console.log('checklist submission', response)
-      setSubmitted(true)
+      
       resetState();
     }
     catch (err) {
