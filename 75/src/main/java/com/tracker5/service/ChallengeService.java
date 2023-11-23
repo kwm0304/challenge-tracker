@@ -6,6 +6,7 @@ import com.tracker5.entity.Challenge;
 import com.tracker5.entity.Checklist;
 import com.tracker5.entity.User;
 import com.tracker5.repository.ChallengeRepository;
+import com.tracker5.repository.ChecklistRepository;
 import com.tracker5.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class ChallengeService {
     private UserRepository userRepository;
     @Autowired
     private ChallengeRepository challengeRepository;
+
+    @Autowired
+    private ChecklistRepository checklistRepository;
 
     public ChallengeDto getProfileDetails(Long userId) {
         return challengeRepository.findActiveChallengeByUserId(userId)
@@ -64,12 +68,9 @@ public class ChallengeService {
         Long activeChallengeId = userRepository.findActiveChallengeByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Challenge challenge = challengeRepository.findById(activeChallengeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Challenge not found"));
+        List<Checklist> checklists = checklistRepository.findSubmittedChecklistWithImageByChallengeId(activeChallengeId);
 
-        return challenge.getChecklists().stream()
-                .filter(checklist -> checklist.getSubmitted() != null && checklist.getSubmitted())
-                .filter(checklist -> checklist.getImageId() != null && !checklist.getImageId().isBlank())
+        return checklists.stream()
                 .map(Checklist::getId)
                 .collect(Collectors.toList());
     }
