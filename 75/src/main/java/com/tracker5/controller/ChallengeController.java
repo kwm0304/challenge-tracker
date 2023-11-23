@@ -5,6 +5,7 @@ import com.tracker5.entity.Challenge;
 import com.tracker5.repository.UserRepository;
 import com.tracker5.security.UserDetailsImpl;
 import com.tracker5.service.ChallengeService;
+import com.tracker5.service.ChecklistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,6 +26,9 @@ public class ChallengeController {
     private ChallengeService challengeService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ChecklistService checklistService;
 
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -42,10 +47,13 @@ public class ChallengeController {
     }
 
     @GetMapping("/{userId}/images/first-last")
-    public ResponseEntity<List<String>> getFirstAndLastImages(@PathVariable Long userId) {
+    public ResponseEntity<List<byte[]>> getFirstAndLastImages(@PathVariable Long userId) {
         Long challengeId = userRepository.findActiveChallengeByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        List<String> images = challengeService.getFirstAndLastImages(challengeId);
+        List<Long> checklistIds = challengeService.getFirstAndLastImages(challengeId);
+        List<byte[]> images = checklistIds.stream()
+                .map(checklistService::getChecklistImage)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(images);
     }
 }

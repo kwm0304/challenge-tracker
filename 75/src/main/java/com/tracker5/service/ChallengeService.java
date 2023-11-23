@@ -77,21 +77,21 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getFirstAndLastImages(Long challengeId) {
-        List<Checklist> submittedChecklist = checklistRepository
+    public List<Long> getFirstAndLastImages(Long challengeId) {
+        List<Checklist> submittedChecklists = checklistRepository
                 .findSubmittedChecklistWithImageByChallengeId(challengeId)
                 .stream()
                 .sorted(Comparator.comparing(Checklist::getDate))
                 .toList();
 
-        if (submittedChecklist.isEmpty()) {
+        if (submittedChecklists.isEmpty()) {
             throw new AppException("No images found for this challenge", HttpStatus.OK);
             }
-            List<String> imageIds = new ArrayList<>();
-            imageIds.add(submittedChecklist.get(0).getImageId());
-            if (submittedChecklist.size() > 1) {
-                imageIds.add(submittedChecklist.get(submittedChecklist.size() - 1).getImageId());
+            List<Long> checklistIds = new ArrayList<>();
+            checklistIds.add(submittedChecklists.get(0).getId());
+            if (submittedChecklists.size() > 1) {
+                checklistIds.add(submittedChecklists.get(submittedChecklists.size() - 1).getId());
             }
-            return imageIds;
+            return checklistIds;
     }
 }
