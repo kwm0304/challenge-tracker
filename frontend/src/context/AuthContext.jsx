@@ -24,22 +24,22 @@ function AuthProvider({ children }) {
     return JSON.parse(localStorage.getItem("user"));
   }
 
-  // const userIsAuthenticated = () => {
-  //   let storedUser = localStorage.getItem("user");
-  //   if (!storedUser) {
-  //     userLogout();
-  //     return false;
-  //   }
-  //   storedUser = JSON.parse(storedUser);
-  //   console.log(storedUser)
+  const userIsAuthenticated = () => {
+    let storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      userLogout();
+      return false;
+    }
+    storedUser = JSON.parse(storedUser);
+    console.log(storedUser)
 
-  //   if (Date.now() > storedUser.data.exp * 1000) {
-  //     userLogout();
-  //     return false;
-  //   }
-  //   return true;
+    if (Date.now() > storedUser.data.exp * 1000) {
+      userLogout();
+      return false;
+    }
+    return true;
     
-  // }
+  }
 
   const userLogin = user => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -60,7 +60,8 @@ function AuthProvider({ children }) {
     isAuthenticated,
     updateAuthStatus,
     userLogin,
-    userLogout
+    userLogout,
+    userIsAuthenticated
   };
 
   return (

@@ -108,13 +108,13 @@ public class ChallengeService {
 
     private int countCompletedTasks(Checklist checklist) {
         int count = 0;
-        if (checklist.getWorkoutOne()) count++;
-        if (checklist.getWorkoutTwo()) count++;
-        if (checklist.getDrinkWater()) count++;
-        if (checklist.getTakePicture() || !checklist.getImageId().isEmpty()) count++;
-        if (checklist.getNoAlcohol()) count++;
-        if (checklist.getNoCheatMeals()) count++;
-        if (checklist.getReadTenPages()) count++;
+        if (checklist.getWorkoutOne() != null && checklist.getWorkoutOne()) count++;
+        if (checklist.getWorkoutTwo() != null && checklist.getWorkoutTwo()) count++;
+        if (checklist.getDrinkWater() != null && checklist.getDrinkWater()) count++;
+        if (checklist.getTakePicture() != null && checklist.getTakePicture()) count++;
+        if (checklist.getNoAlcohol() != null && !checklist.getNoAlcohol()) count++;
+        if (checklist.getNoCheatMeals() != null && !checklist.getNoCheatMeals()) count++;
+        if (checklist.getReadTenPages() != null && !checklist.getReadTenPages()) count++;
         return count;
     }
 

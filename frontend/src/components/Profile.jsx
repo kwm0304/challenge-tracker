@@ -12,10 +12,12 @@ const Profile = () => {
   const navigate = useNavigate();
   const Auth = useAuth();
   const user = Auth.user;
+  console.log(user)
   
   const isUser = user.data.rol[0] === 'USER';
   const [currentUser, setCurrentUser] = useState('');
   const [completed, setCompleted] = useState(0);
+  const [totalCompleted, setTotalCompleted] = useState(0);
 
   useEffect(() => {
     if (!isUser) {
@@ -25,18 +27,20 @@ const Profile = () => {
 
   useEffect(() => {
     async function fetchProfileData() {
-      const numberCompleted = localStorage.getItem('numberCompleted');
+      const numberCompleted = localStorage.getItem('tasksCompleted');
       if (numberCompleted === null) {
         setCompleted(0);
         return;
       }
-      setCompleted(numberCompleted - 2);
+      setCompleted(numberCompleted);
       
       console.log("#", numberCompleted)
       try {
         const response = await authApi.getUserProfile(user);
         console.log('RES', response.data)
         setCurrentUser(response.data);
+        setTotalCompleted((response.data.numberCompleted) - 3);
+        console.log(response.data)
         localStorage.setItem('currentUser', JSON.stringify(response.data));
         localStorage.setItem('dayNumber', response.data.dayNumber);
       } catch(err) {
@@ -45,10 +49,7 @@ const Profile = () => {
     }
     fetchProfileData();
   }, [user]);
-
-  console.log(currentUser)
   
-
   return (
     <div className="pt-12 min-h-screen bg-slate-600 px-4 flex flex-col pt-24">
       {currentUser && (
@@ -66,7 +67,7 @@ const Profile = () => {
         </div>
         <div className="flex items-center px-4 pt-6 justify-between">
           <FaStar className="text-amber-300 text-3xl"/>
-          <p className="font-semibold text-xl text-cyan-400 "> Current streak: <a className="text-amber-300 font-semibold text-xl">69</a></p>
+          <p className="font-semibold text-xl text-cyan-400 "> Current streak: <a className="text-amber-300 font-semibold text-xl">{totalCompleted}</a></p>
         </div>
         <div className="flex items-center justify-between px-4 pt-6">
           <Link to="/restart">

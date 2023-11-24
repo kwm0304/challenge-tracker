@@ -21,6 +21,8 @@ const Checklist = () => {
 
   const [submitted, setSubmitted] = useState(false)
   const [checklistId, setChecklistId] = useState(null)
+  const [date, setDate] = useState(null)
+  const [imageId, setImageId] = useState(null)
   
   const dayNumber = localStorage.getItem('dayNumber')
   console.log('dayNumber', dayNumber)
@@ -30,16 +32,20 @@ const Checklist = () => {
     const fetchChecklistData = async () => {
       try {
         const response = await authApi.getCurrentChecklist(user);
-        setChecklistState({ ...response.data });
-        setChecklistId(response.data.id)
+        const { id, date, imageId, ...rest } = response.data;
+        setChecklistState(rest);
+        setChecklistId(id)
         localStorage.setItem('checklistId', response.data.id)
         setSubmitted(false);
+        setDate(date);
+        setImageId(imageId);
       } catch (err) {
         console.error(err);
       }
     }
     fetchChecklistData();
   }, [user]);
+  console.log(imageId, date)
 
   const resetState = () => {
     setChecklistState({
@@ -53,7 +59,12 @@ const Checklist = () => {
       submitted: false,
     });
     setChecklistId(null);
+    localStorage.removeItem('checklistId');
+    localStorage.removeItem('numberCompleted');
+    localStorage.removeItem('dayNumber');
+    localStorage.removeItem('currentUser');
   };
+  console.log('checkliststate', checklistState)
 
   
   const handleSubmit = async (e) => {
@@ -87,9 +98,9 @@ const Checklist = () => {
     //for local storage
     const countChecked = (updatedState) => {
       const numberComplete = Object.values(updatedState).filter(value => value).length;
-      localStorage.setItem('numberCompleted', numberComplete)
+      localStorage.setItem('tasksCompleted', numberComplete)
     }
-    const allTaskChecked = localStorage.getItem('numberCompleted') === '9';
+    const allTaskChecked = localStorage.getItem('tasksCompleted') === '9';
     
 
   return (
