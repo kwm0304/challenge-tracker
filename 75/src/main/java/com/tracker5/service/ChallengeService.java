@@ -94,4 +94,29 @@ public class ChallengeService {
             }
             return checklistIds;
     }
+
+    public int getTotalCompletedTaskForChallenge(Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new AppException("Challenge not found", HttpStatus.NOT_FOUND));
+
+        int numberCompleted = 0;
+        for (Checklist checklist : challenge.getChecklists()) {
+            numberCompleted += countCompletedTasks(checklist);
+        }
+        return numberCompleted;
+    }
+
+    private int countCompletedTasks(Checklist checklist) {
+        int count = 0;
+        if (checklist.getWorkoutOne()) count++;
+        if (checklist.getWorkoutTwo()) count++;
+        if (checklist.getDrinkWater()) count++;
+        if (checklist.getTakePicture() || !checklist.getImageId().isEmpty()) count++;
+        if (checklist.getNoAlcohol()) count++;
+        if (checklist.getNoCheatMeals()) count++;
+        if (checklist.getReadTenPages()) count++;
+        return count;
+    }
+
+
 }

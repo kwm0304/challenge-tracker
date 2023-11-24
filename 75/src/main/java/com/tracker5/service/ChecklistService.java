@@ -2,6 +2,7 @@ package com.tracker5.service;
 
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.tracker5.entity.Checklist;
+import com.tracker5.exception.AppException;
 import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.ChecklistRepository;
 import com.tracker5.s3.S3Buckets;
@@ -9,6 +10,7 @@ import com.tracker5.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +66,7 @@ public class ChecklistService {
         Checklist existingChecklist = checklistRepository.findById(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         updateFields(existingChecklist, checklistDetails);
+
         return checklistRepository.save(existingChecklist);
     }
 
@@ -105,4 +108,6 @@ public class ChecklistService {
             updateChecklist(checklist.getId(), checklist);
         }
     }
+
+
 }
