@@ -58,7 +58,7 @@ const Profile = () => {
         <div className="flex items-center px-4 justify-between">
           
         <GrMail className="text-amber-300 text-3xl mr-16"><a href="/update"/></GrMail>
-        <p className="font-semibold text-xl text-cyan-400"><a href="/update">Change contact information</a></p>
+        <p className="font-semibold text-xl text-cyan-400"><a href="/update">Change email</a></p>
         
         </div>
         <div className="flex items-center px-4 pt-6 justify-between">

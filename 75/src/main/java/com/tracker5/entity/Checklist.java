@@ -37,7 +37,7 @@ public class Checklist {
     private Boolean noAlcohol;
     @Column(columnDefinition = "BOOLEAN")
     private Boolean takePicture;
-
+// end of form values
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     @JsonIgnore
