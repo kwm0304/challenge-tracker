@@ -15,8 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-    @Query("SELECT * FROM Users WHERE c.has_active_challenge = true")
-    List<User> findAllUsersWithActiveChallenge();
+
     @Query("SELECT c.id FROM User u JOIN u.challenges c WHERE u.id = :userId AND c.active = true")
     Optional<Long> findActiveChallengeByUserId(@Param("userId") Long userId);
 

@@ -17,6 +17,4 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     "FROM Challenge c WHERE c.user.id = :userId AND c.active = true")
     Optional<ChallengeDto> findActiveChallengeByUserId(Long userId);
 
-    @Query("SELECT * FROM Challenge WHERE active = true")
-    List<Challenge> findAllActiveChallenges();
 } 

@@ -27,8 +27,6 @@ public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     @Query("SELECT c FROM Checklist c WHERE c.challenge.id = :challengeId AND c.submitted = true AND c.imageId IS NOT NULL AND c.imageId <> ''")
     List<Checklist> findSubmittedChecklistWithImageByChallengeId(@Param("challengeId") Long challengeId);
 
-    @Query("SELECT c FROM Checklist c WHERE c.date = :todayDate AND c.submitted = false")
-    List<Checklist> findTodayUnsubmittedChecklist(@Param("todayDate") LocalDate todayDate);
 
 
 }
