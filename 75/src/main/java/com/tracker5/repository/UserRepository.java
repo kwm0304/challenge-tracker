@@ -2,6 +2,7 @@ package com.tracker5.repository;
 
 import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,8 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT c.id FROM User u JOIN u.challenges c WHERE u.id = :userId AND c.active = true")
     Optional<Long> findActiveChallengeByUserId(@Param("userId") Long userId);
-
-
-
 
 }
