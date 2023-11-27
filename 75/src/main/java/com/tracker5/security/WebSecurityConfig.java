@@ -41,6 +41,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.POST, "/api/challenge").hasAnyAuthority("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/challenge").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/challenge/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/checklist/current/**").hasAnyAuthority("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/checklist/current/**").hasAnyAuthority("ADMIN", "USER")
                         .requestMatchers("/api/auth/**").permitAll()

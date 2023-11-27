@@ -68,10 +68,21 @@ public class ChallengeController {
     }
 
     @PutMapping("/{challengeId}/end")
-    public ResponseEntity<Challenge> endChallenge(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable Long challengeId) {
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<Challenge> endChallenge(@PathVariable(name = "challengeId") Long challengeId) {
         Challenge challengeToEnd = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new AppException("Challenge not found", HttpStatus.NOT_FOUND));
         Challenge endedChallenge = challengeService.endChallenge(challengeId, challengeToEnd);
         return new ResponseEntity<>(endedChallenge, HttpStatus.OK);
+    }
+
+    @GetMapping("/id")
+    public Long getChallengeId(@AuthenticationPrincipal UserDetailsImpl user) {
+        Optional<Long> activeChallengeId = userService.getActiveChallenge(user.getId());
+        if (activeChallengeId.isPresent()) {
+            return activeChallengeId.get();
+        } else {
+            throw new AppException("Challenge not found", HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -1,14 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi, endUserChallenge } from '../api/authenticationService';
+import { authApi } from '../api/authenticationService';
+import { useAuth } from '../context/AuthContext';
 const EndChallenge = () => {
+  const Auth = useAuth();
+  const user = Auth.user;
+
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [challengeId, setChallengeId] = useState(null);
+
+console.log(user)
+  useEffect(() => {
+    const fetchChallengeData = async () => {
+      try {
+        const response = await authApi.getChallengeId(user);
+        console.log(response.data)
+        setChallengeId(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchChallengeData();
+  }, [user])
 
   const toggleModal = () => {
     setModalOpen(true);
   }
 
+  console.log('challengeId', challengeId)
   const handleCancel = () => {
     setModalOpen(false);
     navigate('/profile');
@@ -17,10 +37,16 @@ const EndChallenge = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await authApi.endChallenge(user, challengeId);
+      const response = await authApi.endUserChallenge(user, challengeId);
+      console.log('user', user)
+      console.log('challengeId', challengeId)
+      console.log("Challenge ended", response)
+      setModalOpen(false);
+      navigate('/start');
+    } catch (err) {
+      console.log("Error ending challenge", err)
+      setModalOpen(false);
     }
-    setModalOpen(false);
-    navigate('/complete');
   }
 
 

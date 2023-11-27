@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<Long> findActiveChallengeByUserId(@Param("userId") Long userId);
 
 
+
+
 }
