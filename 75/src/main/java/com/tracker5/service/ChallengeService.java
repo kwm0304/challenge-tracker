@@ -123,6 +123,9 @@ public class ChallengeService {
         Challenge existingChallenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new AppException("Challenge not found", HttpStatus.NOT_FOUND));
         updateChallengeFields(existingChallenge, challenge);
+        User user = existingChallenge.getUser();
+        user.setHasActiveChallenge(false);
+        userRepository.save(user);
         return challengeRepository.save(existingChallenge);
     }
 
