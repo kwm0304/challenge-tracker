@@ -40,6 +40,7 @@ const Checklist = () => {
         setSubmitted(false);
         setDate(date);
         setImageId(imageId);
+        console.log(checklistState)
       } catch (err) {
         console.error(err);
       }
@@ -75,6 +76,7 @@ const Checklist = () => {
       const updatedChecklistState = { ...checklistState, submitted: true };
       setChecklistState(updatedChecklistState);
       setSubmitted(true);
+      localStorage.setItem('submitted', true)
       const response = await authApi.submitCurrentChecklist(user, checklistState, checklistId)
       console.log('checklist submission', response)
       resetState();
@@ -101,7 +103,7 @@ const Checklist = () => {
       const numberComplete = Object.values(updatedState).filter(value => value).length;
       localStorage.setItem('tasksCompleted', numberComplete)
     }
-    const allTaskChecked = localStorage.getItem('tasksCompleted') === '9';
+    const allTaskChecked = localStorage.getItem('tasksCompleted') === '7';
     
 
   return (
@@ -110,7 +112,7 @@ const Checklist = () => {
       {submitted ? <Gif /> : (
         <>
         
-      <div className="grid grid-cols-3 items-center w-full px-6">
+      <div className="grid grid-cols-3 items-center w-full px-6 mt-6">
         <UploadImage checklistId={checklistId} user={user} />
         <p className="text-amber-300 text-4xl ml-2 text-center mt-9 font-bold"> DAY {dayNumber}</p>
         <div></div>

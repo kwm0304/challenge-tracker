@@ -94,6 +94,13 @@ function getChallengeId(user) {
 
 }
 
+function deleteUser(user, userId) {
+  return apiClient.delete(`/api/users/delete/${userId}`, {
+    headers: { 'Authorization': bearerAuth(user) }
+  })
+
+}
+
 // export const getImage = async (user, checklistId ) => {
 //  apiClient.get(checklistImageUrl(checklistId), {
 //   headers: {
@@ -127,7 +134,8 @@ export const authApi = {
   updateUserInfo,
   getStartAndEndPics,
   endUserChallenge,
-  getChallengeId
+  getChallengeId,
+  deleteUser
 }
 
 apiClient.interceptors.request.use(function (config) {

@@ -4,11 +4,11 @@ import { useCallback } from "react"
 import { submitImage } from "../api/authenticationService"
 import { FaCameraRetro } from "react-icons/fa6";
 import { IoCloseCircleSharp } from "react-icons/io5";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 
 function UploadImage({ checklistId, user }) {
   const [image, setImage] = useState(null)
-  console.log(image)
 
   const onDrop = useCallback((acceptedFiles) => {
     // const formData = new FormData();
@@ -26,7 +26,8 @@ function UploadImage({ checklistId, user }) {
   }
 }, [])
   const {getRootProps, getInputProps} = useDropzone({ 
-    onDrop 
+    onDrop,
+    maxFiles: 1, 
   })
 
   const removeFile = () => {
@@ -50,6 +51,7 @@ function UploadImage({ checklistId, user }) {
     submitImage(user, checklistId, formData)
     .then(() => {
       console.log("file uploaded successfully")
+      setImage(null)
     }).catch(() => {
       console.log("error uploading file")
     })
@@ -61,7 +63,7 @@ function UploadImage({ checklistId, user }) {
     <form onSubmit={handleSubmit}>
     <div {...getRootProps()} className="bg-blue-500 rounded-xl w-12 h-12 mt-10 flex items-center justify-center ">
     <input {...getInputProps()} />
-    <div className="relative">
+    <div className="relative flex">
     {image === null ? (
     <FaCameraRetro className="text-white text-2xl" />
     ) : (
@@ -80,6 +82,11 @@ function UploadImage({ checklistId, user }) {
       onClick={() => removeFile(image)}
     >
       <IoCloseCircleSharp className="w-6 h-6 fill-white hover:text-white hover:fill-red-500 transition-colors" />
+    </button>
+    <button className=" ml-3 hover:scale-125 active transform transition duration-300 ease-in-out "
+      type="submit"
+    >
+      <IoIosCheckmarkCircle className="text-green-500 active:text-blue-500 text-4xl" />
     </button>
     </>
     )}
