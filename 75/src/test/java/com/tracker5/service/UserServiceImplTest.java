@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -88,7 +89,6 @@ class UserServiceImplTest {
     @Test
     void saveUser() {
         String email = "iphone@email.com";
-        when (userRepository.existsByEmail(email)).thenReturn(false);
 
         SignUpDto request = new SignUpDto("Username123", "password", email);
         User expectedUser = new User();
@@ -104,21 +104,25 @@ class UserServiceImplTest {
         User savedUser = underTest.saveUser(mapSignUpDtoToUser(request));
 
         assertNotNull(savedUser);
+        System.out.println("Saved user" + savedUser);
         assertEquals(expectedUser.getUsername(), savedUser.getUsername());
         assertEquals(expectedUser.getPassword(), savedUser.getPassword());
         assertEquals(expectedUser.getEmail(), savedUser.getEmail());
 
-        verify(userRepository, times(1)).existsByEmail(email);
         verify(passwordEncoder, times(1)).encode(request.getPassword());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     private User mapSignUpDtoToUser(SignUpDto signUpDto) {
         User user = new User();
+        Long id = 500L;
+        LocalDateTime now = LocalDateTime.now();
+        user.setId(id);
         user.setUsername(signUpDto.getUsername());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
         user.setEmail(signUpDto.getEmail());
         user.setRoles("USER");
+        user.setCreatedDate(now);
         return user;
     }
 
