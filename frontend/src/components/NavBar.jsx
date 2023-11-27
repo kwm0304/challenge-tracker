@@ -11,6 +11,10 @@ const NavBar = () => {
  
   const logout = () => {
     userLogout()
+    localStorage.removeItem("currentUser")
+    localStorage.removeItem("checklistId")
+    localStorage.removeItem("challengeId")
+    localStorage.removeItem("dayNumber")
     
   }
 
