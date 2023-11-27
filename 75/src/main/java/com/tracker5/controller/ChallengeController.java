@@ -6,6 +6,7 @@ import com.tracker5.repository.UserRepository;
 import com.tracker5.security.UserDetailsImpl;
 import com.tracker5.service.ChallengeService;
 import com.tracker5.service.ChecklistService;
+import com.tracker5.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -29,6 +31,9 @@ public class ChallengeController {
 
     @Autowired
     private ChecklistService checklistService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -55,5 +60,12 @@ public class ChallengeController {
                 .map(checklistService::getChecklistImage)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(images);
+    }
+
+    @PutMapping("/{challengeId}/end")
+    public ResponseEntity<Challenge> endChallenge(@AuthenticationPrincipal UserDetailsImpl user, @RequestBody Challenge challenge) {
+        Optional<Long> challengeId = userService.getActiveChallenge(user.getId());
+        Challenge endedChallenge = challengeService.endChallenge(challengeId, challenge);
+        return new ResponseEntity<>(endedChallenge, HttpStatus.OK);
     }
 }

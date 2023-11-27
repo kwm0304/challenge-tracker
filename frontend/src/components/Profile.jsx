@@ -6,7 +6,6 @@ import { authApi } from "../api/authenticationService"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { MdPlaylistAddCheck } from "react-icons/md"
-import { Link } from "react-router-dom"
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -70,10 +69,8 @@ const Profile = () => {
           <p className="font-semibold text-xl text-cyan-400 "> Current streak: <a className="text-amber-300 font-semibold text-xl">{totalCompleted}</a></p>
         </div>
         <div className="flex items-center justify-between px-4 pt-6">
-          <Link to="/restart">
-          <ImRedo2 className="text-3xl text-amber-300"/>
-          </Link>
-          <p className='font-semibold text-xl text-cyan-400 '>Start challenge over </p>
+          <ImRedo2 className="text-3xl text-amber-300"><a href="/end"></a></ImRedo2>
+          <p className='font-semibold text-xl text-cyan-400 '><a href="/end">Start challenge over </a></p>
         </div>
         </>
       )}

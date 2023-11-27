@@ -119,4 +119,16 @@ public class ChallengeService {
     }
 
 
+    public Challenge endChallenge(Long challengeId, Challenge challenge) {
+        Challenge existingChallenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new AppException("Challenge not found", HttpStatus.NOT_FOUND));
+        updateChallengeFields(existingChallenge, challenge);
+        return challengeRepository.save(existingChallenge);
+    }
+
+    public void updateChallengeFields(Challenge existingChallenge, Challenge challengeDetails) {
+        LocalDate today = LocalDate.now();
+        existingChallenge.setEndDate(today);
+        existingChallenge.setActive(false);
+    }
 }

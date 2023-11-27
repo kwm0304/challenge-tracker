@@ -10,6 +10,7 @@ import Pictures from './components/Pictures'
 import Home from './components/Home'
 import UpdateContact from './components/UpdateContact'
 import ChallengeComplete from './components/ChallengeComplete'
+import EndChallenge from './components/EndChallenge'
 function App() {
   
 
@@ -34,6 +35,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/start" element={<StartChallenge />} />
+        <Route path="/end" element={<EndChallenge />} />
         <Route path="/checklist" element={<Checklist />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<Signup />} />
