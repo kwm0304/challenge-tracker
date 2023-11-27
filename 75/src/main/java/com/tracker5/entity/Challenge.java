@@ -32,7 +32,7 @@ public class Challenge {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private Set<Checklist> checklists;
 

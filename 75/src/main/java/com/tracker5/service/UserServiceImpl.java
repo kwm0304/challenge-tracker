@@ -5,6 +5,7 @@ import com.tracker5.dto.UserUpdateRequest;
 import com.tracker5.entity.Challenge;
 import com.tracker5.entity.User;
 import com.tracker5.exception.AppException;
+import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final ChallengeRepository challengeRepository;
 
     @Override
     public List<User> getAllUsers() {

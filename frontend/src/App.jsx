@@ -30,7 +30,6 @@ function App() {
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
-  console.log("Is authenticated", isAuthenticated)
   return (
     <>
       {isAuthenticated && <NavBar />}
