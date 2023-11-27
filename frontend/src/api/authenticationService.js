@@ -71,7 +71,14 @@ function updateUserInfo(user, contactInfo, userId) {
   })
 }
 
-function endUserChallenge(user, userId)
+function endUserChallenge(user, challengeId) {
+  return apiClient.put(`/api/challenge/${challengeId}/end`, {
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': bearerAuth(user)
+    }
+  })
+}
 
 function getStartAndEndPics(user, userId) {
   return apiClient.get(`/api/challenge/${userId}/images/first-last`, {
@@ -111,7 +118,8 @@ export const authApi = {
   getCurrentChecklist,
   submitCurrentChecklist,
   updateUserInfo,
-  getStartAndEndPics
+  getStartAndEndPics,
+  endUserChallenge
 }
 
 apiClient.interceptors.request.use(function (config) {

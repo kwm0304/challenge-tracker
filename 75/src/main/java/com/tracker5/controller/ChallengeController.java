@@ -2,6 +2,8 @@ package com.tracker5.controller;
 
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.tracker5.entity.Challenge;
+import com.tracker5.exception.AppException;
+import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.UserRepository;
 import com.tracker5.security.UserDetailsImpl;
 import com.tracker5.service.ChallengeService;
@@ -35,6 +37,9 @@ public class ChallengeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ChallengeRepository challengeRepository;
+
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,8 +68,10 @@ public class ChallengeController {
     }
 
     @PutMapping("/{challengeId}/end")
-    public ResponseEntity<Challenge> endChallenge(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable Long challengeId, @RequestBody Challenge challenge) {
-        Challenge endedChallenge = challengeService.endChallenge(challengeId, challenge);
+    public ResponseEntity<Challenge> endChallenge(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable Long challengeId) {
+        Challenge challengeToEnd = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new AppException("Challenge not found", HttpStatus.NOT_FOUND));
+        Challenge endedChallenge = challengeService.endChallenge(challengeId, challengeToEnd);
         return new ResponseEntity<>(endedChallenge, HttpStatus.OK);
     }
 }

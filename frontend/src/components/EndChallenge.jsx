@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { authApi, endUserChallenge } from '../api/authenticationService';
 const EndChallenge = () => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
@@ -14,7 +14,11 @@ const EndChallenge = () => {
     navigate('/profile');
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await authApi.endChallenge(user, challengeId);
+    }
     setModalOpen(false);
     navigate('/complete');
   }
