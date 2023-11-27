@@ -71,6 +71,8 @@ function updateUserInfo(user, contactInfo, userId) {
   })
 }
 
+function endUserChallenge(user, userId)
+
 function getStartAndEndPics(user, userId) {
   return apiClient.get(`/api/challenge/${userId}/images/first-last`, {
     headers: { 'Authorization': bearerAuth(user)},

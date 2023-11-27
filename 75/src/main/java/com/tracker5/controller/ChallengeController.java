@@ -63,8 +63,7 @@ public class ChallengeController {
     }
 
     @PutMapping("/{challengeId}/end")
-    public ResponseEntity<Challenge> endChallenge(@AuthenticationPrincipal UserDetailsImpl user, @RequestBody Challenge challenge) {
-        Optional<Long> challengeId = userService.getActiveChallenge(user.getId());
+    public ResponseEntity<Challenge> endChallenge(@AuthenticationPrincipal UserDetailsImpl user, @PathVariable Long challengeId, @RequestBody Challenge challenge) {
         Challenge endedChallenge = challengeService.endChallenge(challengeId, challenge);
         return new ResponseEntity<>(endedChallenge, HttpStatus.OK);
     }
