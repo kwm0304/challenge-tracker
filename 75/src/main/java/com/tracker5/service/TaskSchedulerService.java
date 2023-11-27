@@ -1,6 +1,6 @@
 package com.tracker5.service;
 
-import com.tracker5.entity.Challenge;
+
 import com.tracker5.entity.Checklist;
 import com.tracker5.entity.User;
 import com.tracker5.repository.ChallengeRepository;
