@@ -30,6 +30,7 @@ const Checklist = () => {
   console.log('dayNumber', dayNumber)
 
   //if not submitted for the day, fetch days list
+  //keeps rerendering because of the useEffect
   useEffect(() => {
     const fetchChecklistData = async () => {
       try {
@@ -47,8 +48,8 @@ const Checklist = () => {
       }
     }
     fetchChecklistData();
-  }, [user]);
-  console.log(imageId, date)
+  }, [user, checklistState]);
+  
 
   const resetState = () => {
     setChecklistState({
