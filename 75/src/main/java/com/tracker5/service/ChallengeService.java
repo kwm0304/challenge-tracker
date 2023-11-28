@@ -43,26 +43,24 @@ public class ChallengeService {
         LocalDate startDate = LocalDate.now();
         challenge.setStartDate(startDate);
         challenge.setActive(true);
+        challenge.setDayNumber(1);
 
         Set<Checklist> checklists = new HashSet<>();
         LocalDate endDate = startDate.plusDays(74);
+        LocalDate currentDate = startDate;
 
-        int totalDays = 75;
-        for (int i = 0; i < totalDays; i++) {
+
+        for (int dayNumber = 1; dayNumber <= 75; dayNumber++) {
             Checklist checklist = new Checklist();
-            checklist.setDate(startDate.plusDays(i));
+            checklist.setDate(currentDate);
             checklist.setChallenge(challenge);
             checklists.add(checklist);
+            challenge.setDayNumber(dayNumber++);
+            currentDate = currentDate.plusDays(1);
         }
 
-        List<Checklist> sortedChecklists = checklists.stream()
-                        .sorted(Comparator.comparing(Checklist::getDate))
-                        .toList();
 
-        int dayNumber = 1;
-        for (Checklist checklist : sortedChecklists) {
-            checklist.getChallenge().setDayNumber(dayNumber++);
-        }
+
         challenge.setEndDate(endDate);
         challenge.setChecklists(checklists);
         challengeRepository.save(challenge);
