@@ -48,7 +48,7 @@ const Checklist = () => {
       }
     }
     fetchChecklistData();
-  }, [user, checklistState]);
+  }, [user]);
   
 
   const resetState = () => {
