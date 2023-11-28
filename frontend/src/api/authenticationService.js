@@ -117,7 +117,7 @@ function deleteUser(user, userId) {
 // })
 // }
 
-export const checklistImageUrl = (checklistId) => `http://localhost:8080/api/checklist/current/${checklistId}/image`;
+export const checklistImageUrl = (checklistId) => `https://challenge-tracker-production.up.railway.app//api/checklist/current/${checklistId}/image`;
 
 
 function bearerAuth(user) {
