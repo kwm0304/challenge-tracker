@@ -30,8 +30,7 @@ public class ChecklistService {
     private final ChecklistRepository checklistRepository;
     @Autowired
     private ChallengeRepository challengeRepository;
-    @Value("${aws.region}")
-    private String awsRegion;
+    
     //get checklist
     public Checklist getCurrentDayChecklist(Long challengeId) {
         LocalDate today = LocalDate.now();
