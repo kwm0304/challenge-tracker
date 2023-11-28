@@ -66,6 +66,7 @@ public class ChecklistService {
         Checklist existingChecklist = checklistRepository.findById(checklistId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         updateFields(existingChecklist, checklistDetails);
+        System.out.println("Existing checklist =" + existingChecklist);
 
         return checklistRepository.save(existingChecklist);
     }
@@ -78,7 +79,7 @@ public class ChecklistService {
         existingChecklist.setTakePicture(checklistDetails.getTakePicture());
         existingChecklist.setNoAlcohol(checklistDetails.getNoAlcohol());
         existingChecklist.setNoCheatMeals(checklistDetails.getNoCheatMeals());
-        existingChecklist.setSubmitted(checklistDetails.getSubmitted());
+        existingChecklist.setSubmitted(true);
     }
 
     public byte[] getChecklistImage(Long checklistId) {

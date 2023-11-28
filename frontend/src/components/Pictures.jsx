@@ -32,6 +32,7 @@ const Pictures = () => {
         const response = await apiClient.get(`/api/challenge/${userId}/images`, {
           headers: { Authorization: `Bearer ${accessToken}` }
         })
+        console.log(userId)
         const ids = response.data;
         console.log('ids', ids)
         console.log(accessToken)
@@ -49,6 +50,7 @@ const Pictures = () => {
     }
     fetchImages()
   }, [user, accessToken, userId])
+  console.log(pictures)
   return (
     <div className="min-h-screen bg-slate-800">
       <div className="grid grid-cols-3 gap-1 mx-1 text-white pt-24 justify-center text-center">

@@ -17,7 +17,8 @@ const Checklist = () => {
     noAlcohol: false,
     readTenPages: false,
     noCheatMeals: false,
-    takePicture: false
+    takePicture: false,
+    submitted: false,
   })
 
   const [submitted, setSubmitted] = useState(false)
@@ -73,7 +74,7 @@ const Checklist = () => {
     e.preventDefault();
     
     try {
-      const updatedChecklistState = { ...checklistState, submitted: true };
+      const updatedChecklistState = { ...checklistState  };
       setChecklistState(updatedChecklistState);
       setSubmitted(true);
       localStorage.setItem('submitted', true)
