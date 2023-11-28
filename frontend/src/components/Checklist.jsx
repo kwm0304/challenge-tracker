@@ -47,7 +47,7 @@ const Checklist = () => {
       }
     }
     fetchChecklistData();
-  }, [user, checklistState]);
+  }, [user]);
   console.log(imageId, date)
 
   const resetState = () => {
