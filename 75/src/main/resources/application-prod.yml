@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}
     username: ${MYSQLUSER}
     password: ${MYSQLPASSWORD}
-    name: challenge-tracker-75
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
     init:
