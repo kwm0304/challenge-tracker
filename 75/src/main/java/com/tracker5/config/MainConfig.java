@@ -1,5 +1,6 @@
 package com.tracker5.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,17 +10,18 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
+@RequiredArgsConstructor
 public class MainConfig {
-    @Value("${spring.mail.host}")
+    @Value("${MAILHOST}")
     private String host;
 
-    @Value("${spring.mail.port}")
+    @Value("${MAILPORT}")
     private int port;
 
-    @Value("${spring.mail.username}")
+    @Value("${MAILUSER}")
     private String username;
 
-    @Value("${spring.mail.password}")
+    @Value("${MAILPASSWORD}")
     private String password;
 
     @Bean
