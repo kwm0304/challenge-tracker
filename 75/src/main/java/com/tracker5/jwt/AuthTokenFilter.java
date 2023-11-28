@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -24,7 +25,6 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
