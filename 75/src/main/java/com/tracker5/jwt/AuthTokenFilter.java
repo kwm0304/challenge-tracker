@@ -29,7 +29,7 @@ import java.util.Optional;
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private final JwtUtils jwtUtils;
-
+    @Autowired
     private final UserDetailsService userDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
