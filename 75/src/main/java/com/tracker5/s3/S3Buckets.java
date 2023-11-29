@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class S3Buckets {
 
-    @Value("${bucketString}")
-    private String checklist;
+
+    private String checklist = "75challenge-image-upload-123";
 
     public String getChecklist() {
         return checklist;
