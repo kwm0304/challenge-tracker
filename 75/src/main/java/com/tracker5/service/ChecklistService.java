@@ -53,6 +53,8 @@ public class ChecklistService {
         String imageId = UUID.randomUUID().toString();
 
         String key = "checklist-images/%s/%s".formatted(checklistId, imageId);
+        System.out.println("KEY" + key);
+        System.out.println("BUCKET NAME " + s3Buckets.getChecklist());
         try {
             s3Service.putObject(s3Buckets.getChecklist(), key, file.getBytes());
         } catch (IOException e) {
