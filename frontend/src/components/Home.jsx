@@ -6,12 +6,12 @@ return (
     <h1 className="font-display text-white text-6xl text-center">75 Day Challenge</h1>
   <div className="mt-12 text-2xl grid gap-y-8">
     <div className="">
-    <button className="bg-green-600 w-48 py-3 rounded-xl">
+    <button className="bg-green-600 w-48 py-3 rounded-xl text-white font-semibold">
       <Link to="/signup">Signup</Link>
     </button>
     </div>
     <div>
-    <button className="bg-green-600 w-48 py-3 rounded-xl">
+    <button className="bg-green-600 w-48 py-3 rounded-xl text-white font-semibold">
       <Link to="/login">Login</Link>
     </button>
     </div>
