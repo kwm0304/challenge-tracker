@@ -32,22 +32,27 @@ const Checklist = () => {
   //if not submitted for the day, fetch days list
   //keeps rerendering because of the useEffect
   useEffect(() => {
-    const fetchChecklistData = async () => {
-      try {
-        const response = await authApi.getCurrentChecklist(user);
-        const { id, date, imageId, ...rest } = response.data;
-        setChecklistState(rest);
-        setChecklistId(id)
-        localStorage.setItem('checklistId', response.data.id)
-        setSubmitted(false);
-        setDate(date);
-        setImageId(imageId);
-        console.log(checklistState)
-      } catch (err) {
-        console.error(err);
+    if (localStorage.getItem('checklistState')) {
+      setChecklistState(JSON.parse(localStorage.getItem('checklistState')))
+    } else {
+      const fetchChecklistData = async () => {
+        try {
+          const response = await authApi.getCurrentChecklist(user);
+          const { id, date, imageId, ...rest } = response.data;
+          setChecklistState(rest);
+          setChecklistId(id)
+          localStorage.setItem('checklistId', response.data.id)
+          setSubmitted(false);
+          setDate(date);
+          setImageId(imageId);
+          console.log(checklistState)
+        } catch (err) {
+          console.error(err);
+        }
       }
+      fetchChecklistData();
     }
-    fetchChecklistData();
+    
   }, [user]);
   
 
@@ -91,6 +96,7 @@ const Checklist = () => {
     const handleChecklistChange = async (e, key) => {
       const updatedState = {...checklistState, [key]: e.target.checked}
       setChecklistState(updatedState)
+      localStorage.setItem('checklistState', JSON.stringify(updatedState))
       countChecked(updatedState)
       try {
         await authApi.submitCurrentChecklist(user, updatedState, checklistId);
@@ -120,13 +126,19 @@ const Checklist = () => {
         <div></div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-rows-7 gap-y-4 h-full px-2 w-96 text-center pt-4 items-center">
+        <div className="grid grid-rows-7 gap-y-4 h-full px-2 w-96 text-center py-4 items-center bg-slate-800 border-2 border-slate-400 rounded-lg">
           <ChecklistItem label="Workout 1" value={checklistState.workoutOne} onChange={(e) => handleChecklistChange(e, "workoutOne")} />
+          <div className="border bt-slate-400 opacity-50"></div>
           <ChecklistItem label="Workout2" value={checklistState.workoutTwo} onChange={e => handleChecklistChange(e, 'workoutTwo')} />
+          <div className="border bt-slate-400 opacity-50"></div>
           <ChecklistItem label="Drink Water" value={checklistState.drinkWater} onChange={e => handleChecklistChange(e, 'drinkWater')} />
+          <div className="border bt-slate-400 opacity-50"></div>
           <ChecklistItem label="No Alcohol" value={checklistState.noAlcohol} onChange={e => handleChecklistChange(e, 'noAlcohol')} />
+          <div className="border bt-slate-400 opacity-50"></div>
           <ChecklistItem label="Read 10 Pages" value={checklistState.readTenPages} onChange={e => handleChecklistChange(e, 'readTenPages')} />
+          <div className="border bt-slate-400 opacity-50"></div>
           <ChecklistItem label="Stuck to Diet" value={checklistState.noCheatMeals} onChange={e => handleChecklistChange(e, 'noCheatMeals')} />
+          <div className="border bt-slate-400 opacity-50"></div>
           <ChecklistItem label="Take Picture" value={checklistState.takePicture} onChange={e => handleChecklistChange(e, 'takePicture')} />
         </div>
         {allTaskChecked && (

@@ -55,11 +55,12 @@ const formInputClass = "w-full px-3 py-2 text-gray-700 border rounded-lg  focus:
         <div className='m'>
           <label htmlFor="password" className={formLabelClass}>Password</label>
           <input
-            type="text"
+            type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder='********'
             className={formInputClass}
             />
         </div>

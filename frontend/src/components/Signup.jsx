@@ -79,6 +79,7 @@ const Signup = () => {
             className={formInputClass}
             />
         </div>
+        <p className='text-slate-400'>Already have an account?  <a href='/login' className='text-amber-400 font-semibold'>Login</a></p>
         <div className='flex justify-center'>
         <button className='bg-green-600 text-lg uppercase text-white  font-semibold w-24 my-4 rounded-xl p-2'>Submit</button>
         </div>

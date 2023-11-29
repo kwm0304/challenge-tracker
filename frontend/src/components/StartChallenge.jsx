@@ -14,6 +14,7 @@ const StartChallenge = () => {
     try {
       const response  = await authApi.startChallenge(user);
       console.log(response)
+      localStorage.setItem('dayNumber', 1)
       navigate('/checklist')
     } catch (err) {
       console.log("Error", err)
