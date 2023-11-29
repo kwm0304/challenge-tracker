@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { checklistImageUrl } from '../api/authenticationService'
+import { authApi, checklistImageUrl } from '../api/authenticationService'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
-import { apiClient } from '../api/axios'
+
 const Pictures = () => {
   const Auth = useAuth();
   const user = Auth.user
@@ -29,21 +29,30 @@ const Pictures = () => {
         return;   
       }
       try {
-        const response = await apiClient.get(`/api/challenge/${userId}/images`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        })
+        const response = await authApi.getAllChecklistImages(user, userId)
+        console.log('response', response)
         console.log(userId)
         const ids = response.data;
         console.log('ids', ids)
         console.log(accessToken)
-        const urls = await Promise.all(ids.map(id => 
-          axios.get(checklistImageUrl(id), {
+        const urls = await Promise.all(ids.map(async (id) => {
+
+          try {
+            const response = await axios.get(checklistImageUrl(id), {
             headers: { Authorization: `Bearer ${accessToken}` },
           responseType: 'blob'
-        }).then(res => URL.createObjectURL(res.data))
+        })
+        const imageUrl = URL.createObjectURL(response.data)
+        console.log("here")
+        return imageUrl;
+      } catch (error) {
+        console.log(error)
+        return null;
+      }
+      })
+  )
+        setPictures(urls.filter((url) => url !== null))
         
-        ))
-        setPictures(urls)
       } catch (error) {
         console.log(error)
       }

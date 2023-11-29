@@ -49,6 +49,15 @@ function submitCurrentChecklist(user, checklist, checklistId) {
   })
 }
 
+function getAllChecklistImages(user, userId) {
+  return apiClient.get(`/api/challenge/${userId}/images`, {
+    headers: {
+      'Authorization': bearerAuth(user),
+      'Content-Type': 'application/json'
+    },
+  })
+}
+
 export const submitImage = async (user, checklistId, formData) => {
   try {
     console.log(checklistId, formData)
@@ -118,7 +127,8 @@ function deleteUser(user, userId) {
 // })
 // }
 
-export const checklistImageUrl = (checklistId) => `https://challenge-tracker-production.up.railway.app//api/checklist/current/${checklistId}/image`;
+export const checklistImageUrl = (checklistId) => `https://challenge-tracker-production.up.railway.app/api/checklist/current/${checklistId}/image`;
+// export const checklistImageUrl = (checklistId) => `http://localhost:8080/api/checklist/current/${checklistId}/image`;
 
 
 function bearerAuth(user) {
@@ -136,7 +146,8 @@ export const authApi = {
   getStartAndEndPics,
   endUserChallenge,
   getChallengeId,
-  deleteUser
+  deleteUser,
+  getAllChecklistImages
 }
 
 apiClient.interceptors.request.use(function (config) {

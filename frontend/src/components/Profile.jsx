@@ -2,11 +2,12 @@ import { useState, useEffect } from "react"
 import { FaStar } from "react-icons/fa6";
 import { ImRedo2 } from 'react-icons/im'
 import { GrMail } from 'react-icons/gr'
-import { authApi } from "../api/authenticationService"
+import { authApi, checklistImageUrl } from "../api/authenticationService"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { MdPlaylistAddCheck } from "react-icons/md"
 import { AiOutlineUserDelete } from "react-icons/ai";
+import axios from "axios";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -18,11 +19,24 @@ const Profile = () => {
   const [currentUser, setCurrentUser] = useState('');
   const [completed, setCompleted] = useState(0);
   const [totalCompleted, setTotalCompleted] = useState(0);
+  const checklistId = 752;
+  const [image, setImage] = useState(null)
+
 
   useEffect(() => {
     if (!isUser) {
       navigate('/');
-    }
+    } else {
+      axios.get(checklistImageUrl(checklistId), {
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+        responseType: 'blob'
+    }).then(res => {
+      const imageUrl = URL.createObjectURL(res.data)
+      setImage(imageUrl)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
   }, [isUser, navigate]);
 
   useEffect(() => {
@@ -82,6 +96,9 @@ const Profile = () => {
           <p className='font-semibold text-xl text-cyan-400 '><a href="/end">Delete Account</a></p>
         </div>
 
+        </div>
+        <div className="flex justify-center pt-2">
+        <img src={image} alt="checklist" className="" width={100} height={100}/>
         </div>
         </>
       )}

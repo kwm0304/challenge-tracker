@@ -27,9 +27,6 @@ public class ChallengeService {
     @Autowired
     private ChecklistRepository checklistRepository;
 
-    @Autowired
-    private ChecklistService checklistService;
-
     public ChallengeDto getProfileDetails(Long userId) {
         return challengeRepository.findActiveChallengeByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Active challenge not found for user"));
@@ -69,23 +66,15 @@ public class ChallengeService {
 
 
 
-    public List<byte[]> getAllChecklistImagesForChallenge(Long userId) {
+    public List<Long> getAllChecklistImagesForChallenge(Long userId) {
         Long activeChallengeId = userRepository.findActiveChallengeByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         List<Checklist> checklists = checklistRepository.findSubmittedChecklistWithImageByChallengeId(activeChallengeId);
-
-        List<byte[]> checklistImages = new ArrayList<>();
-        for (Checklist checklist : checklists) {
-            try {
-                byte[] checklistImage = checklistService.getChecklistImage(checklist.getId());
-                checklistImages.add(checklistImage);
-            } catch (ResourceNotFoundException ex) {
-                System.out.println("Image not found for ChecklistId: " + checklist.getId());
-            }
-
-        }
-        return checklistImages;
+        System.out.println("Checklist with ids:" + checklists);
+        return checklists.stream()
+                .map(Checklist::getId)
+                .collect(Collectors.toList());
     }
 
     public List<Long> getFirstAndLastImages(Long challengeId) {
