@@ -120,7 +120,7 @@ const Checklist = () => {
         <div></div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-rows-7 gap-y-6 h-full px-2 w-96 text-center pt-4 items-center">
+        <div className="grid grid-rows-7 gap-y-4 h-full px-2 w-96 text-center pt-4 items-center">
           <ChecklistItem label="Workout 1" value={checklistState.workoutOne} onChange={(e) => handleChecklistChange(e, "workoutOne")} />
           <ChecklistItem label="Workout2" value={checklistState.workoutTwo} onChange={e => handleChecklistChange(e, 'workoutTwo')} />
           <ChecklistItem label="Drink Water" value={checklistState.drinkWater} onChange={e => handleChecklistChange(e, 'drinkWater')} />
