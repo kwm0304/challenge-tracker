@@ -55,11 +55,8 @@ public class ChallengeService {
             checklist.setDate(currentDate);
             checklist.setChallenge(challenge);
             checklists.add(checklist);
-            challenge.setDayNumber(dayNumber++);
             currentDate = currentDate.plusDays(1);
         }
-
-
 
         challenge.setEndDate(endDate);
         challenge.setChecklists(checklists);
@@ -67,11 +64,7 @@ public class ChallengeService {
         return challenge;
     }
 
-    public Long getCurrentChallengeIdForUser(Long userId) {
-        return challengeRepository.findActiveChallengeByUserId(userId)
-                .map(ChallengeDto::getId)
-                .orElse(null);
-    }
+
 
     public List<Long> getAllChecklistImagesForChallenge(Long userId) {
         Long activeChallengeId = userRepository.findActiveChallengeByUserId(userId)

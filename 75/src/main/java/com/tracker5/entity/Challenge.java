@@ -41,4 +41,8 @@ public class Challenge {
 
     @Column(name = "day_number")
     private int dayNumber;
+
+    public void incrementDayNumber() {
+        this.dayNumber++;
+    }
 }

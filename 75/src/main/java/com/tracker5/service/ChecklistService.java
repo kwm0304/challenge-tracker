@@ -1,6 +1,7 @@
 package com.tracker5.service;
 
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
+import com.tracker5.entity.Challenge;
 import com.tracker5.entity.Checklist;
 import com.tracker5.repository.ChallengeRepository;
 import com.tracker5.repository.ChecklistRepository;
@@ -66,7 +67,8 @@ public class ChecklistService {
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist not found"));
         updateFields(existingChecklist, checklistDetails);
         System.out.println("Existing checklist =" + existingChecklist);
-
+        Challenge challenge = existingChecklist.getChallenge();
+        challenge.incrementDayNumber();
         return checklistRepository.save(existingChecklist);
     }
 
