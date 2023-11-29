@@ -51,6 +51,7 @@ function submitCurrentChecklist(user, checklist, checklistId) {
 
 export const submitImage = async (user, checklistId, formData) => {
   try {
+    console.log(checklistId, formData)
     apiClient.post(`/api/checklist/current/${checklistId}/image`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
