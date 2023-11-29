@@ -9,3 +9,6 @@ spring:
     port: ${MAILPORT}
     username: ${MAILUSER}
     password: ${MAILPASSWORD}
+  servlet:
+    multipart:
+      max-file-size: ${MAXSIZE}
