@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class ChallengeService {
@@ -53,8 +52,8 @@ public class ChallengeService {
             Checklist checklist = new Checklist();
             checklist.setDate(currentDate);
             checklist.setChallenge(challenge);
-            checklists.add(checklist);
             checklist.setChecklistDayNumber(i);
+            checklists.add(checklist);
             challenge.setDayNumber(i);
             currentDate = currentDate.plusDays(1);
         }
