@@ -112,7 +112,7 @@ const Checklist = () => {
       const numberComplete = Object.values(updatedState).filter(value => value).length;
       localStorage.setItem('tasksCompleted', numberComplete)
     }
-    const allTaskChecked = localStorage.getItem('tasksCompleted') === '7';
+    const allTaskChecked = localStorage.getItem('tasksCompleted') <= '7';
     
 
   return (
