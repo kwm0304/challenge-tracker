@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "aws.s3.buckets")
 public class S3Buckets {
 
-    private String checklist;
+    private String checklist = "${bucketString}";
 
     public String getChecklist() {
         return checklist;
