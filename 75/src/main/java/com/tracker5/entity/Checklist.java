@@ -46,6 +46,6 @@ public class Checklist {
     private String imageId;
     @Column(columnDefinition = "BOOLEAN")
     private Boolean submitted;
-
+    @Column(name = "checklist_day_number")
     private int checklistDayNumber;
 }
