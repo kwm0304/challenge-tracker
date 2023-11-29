@@ -49,22 +49,14 @@ public class ChallengeService {
         LocalDate currentDate = startDate;
         LocalDate endDate = startDate.plusDays(74);
 
-//        for (int dayNumber = 1; dayNumber <= 75; dayNumber++) {
-//            Checklist checklist = new Checklist();
-//            checklist.setDate(currentDate);
-//            checklist.setChallenge(challenge);
-//            checklists.add(checklist);
-//            currentDate = currentDate.plusDays(1);
-//        }
-
-        while (!currentDate.isAfter(endDate)) {
+        for (int i = 1; i <= 75; i++) {
             Checklist checklist = new Checklist();
             checklist.setDate(currentDate);
             checklist.setChallenge(challenge);
             checklists.add(checklist);
-
+            checklist.setChecklistDayNumber(i);
+            challenge.setDayNumber(i);
             currentDate = currentDate.plusDays(1);
-            challenge.incrementDayNumber();
         }
 
         challenge.setEndDate(endDate);
