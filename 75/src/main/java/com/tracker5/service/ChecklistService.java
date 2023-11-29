@@ -36,9 +36,13 @@ public class ChecklistService {
     public Checklist getCurrentDayChecklist(Long challengeId) {
         LocalDate today = LocalDate.now();
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        Challenge currentChallenge = challengeRepository.getReferenceById(challengeId);
 
-        return checklistRepository.findByDateAndChallengeId(today, challengeId)
+        Checklist currentChecklist = checklistRepository.findByDateAndChallengeId(today, challengeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist for current date not found"));
+        currentChallenge.setDayNumber(currentChecklist.getChecklistDayNumber());
+        challengeRepository.save(currentChallenge);
+        return  currentChecklist;
     }
 
     public void uploadChecklistImage(Long checklistId, MultipartFile file) throws IOException {
