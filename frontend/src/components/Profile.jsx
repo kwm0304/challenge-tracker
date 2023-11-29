@@ -20,6 +20,7 @@ const Profile = () => {
   const [completed, setCompleted] = useState(0);
   const [totalCompleted, setTotalCompleted] = useState(0);
   const checklistId = localStorage.getItem('checklistId');
+  console.log('checklistId', checklistId)
   const [image, setImage] = useState(null)
 
 
@@ -43,7 +44,7 @@ const Profile = () => {
     async function fetchProfileData() {
       const numberCompleted = localStorage.getItem('tasksCompleted');
       
-      setCompleted(numberCompleted);
+      setCompleted(numberCompleted - 1);
       if (numberCompleted === null) {
         setCompleted(0);
       }
