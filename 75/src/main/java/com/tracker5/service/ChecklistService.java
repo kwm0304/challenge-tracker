@@ -68,7 +68,7 @@ public class ChecklistService {
         updateFields(existingChecklist, checklistDetails);
         System.out.println("Existing checklist =" + existingChecklist);
         Challenge challenge = existingChecklist.getChallenge();
-        challenge.incrementDayNumber();
+
         return checklistRepository.save(existingChecklist);
     }
 
