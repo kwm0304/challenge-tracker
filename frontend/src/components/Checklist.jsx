@@ -32,7 +32,7 @@ const Checklist = () => {
   //if not submitted for the day, fetch days list
   //keeps rerendering because of the useEffect
   useEffect(() => {
-    if (localStorage.getItem('checklistState')) {
+    if (localStorage.getItem('checklistId')) {
       setChecklistState(JSON.parse(localStorage.getItem('checklistState')))
     } else {
       const fetchChecklistData = async () => {

@@ -19,7 +19,7 @@ const Profile = () => {
   const [currentUser, setCurrentUser] = useState('');
   const [completed, setCompleted] = useState(0);
   const [totalCompleted, setTotalCompleted] = useState(0);
-  const checklistId = 752;
+  const checklistId = localStorage.getItem('checklistId');
   const [image, setImage] = useState(null)
 
 
@@ -98,7 +98,11 @@ const Profile = () => {
 
         </div>
         <div className="flex justify-center pt-2">
-        <img src={image} alt="checklist" className="" width={100} height={100}/>
+          {image && (
+            <>
+            <img src={image} alt="checklist" className="rounded-full" width={200} height={200}/>
+            </>
+          )}
         </div>
         </>
       )}
