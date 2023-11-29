@@ -12,3 +12,9 @@ spring:
   servlet:
     multipart:
       max-file-size: ${MAXSIZE}
+aws:
+  accessKeyId: ${accessKeyId}
+  secretAccessKey: ${secretAccessKey}
+  s3:
+    buckets:
+      checklist: ${bucketString}
