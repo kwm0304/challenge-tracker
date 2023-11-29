@@ -18,8 +18,9 @@ public class ChecklistDto {
     private Boolean noCheatMeals;
     private Boolean noAlcohol;
     private Boolean takePicture;
-
-    public ChecklistDto(Long id, LocalDate date, Boolean workoutOne, Boolean workoutTwo, Boolean readTenPages, Boolean drinkWater, Boolean noCheatMeals, Boolean noAlcohol, Boolean takePicture) {
+    private int checklistDayNumber;
+    public ChecklistDto(Long id, LocalDate date, Boolean workoutOne, Boolean workoutTwo, Boolean readTenPages, Boolean drinkWater, Boolean noCheatMeals, Boolean noAlcohol, Boolean takePicture,
+                        int checklistDayNumber) {
         this.id = id;
         this.date = date;
         this.workoutOne = workoutOne;
@@ -29,5 +30,6 @@ public class ChecklistDto {
         this.noCheatMeals = noCheatMeals;
         this.noAlcohol = noAlcohol;
         this.takePicture = takePicture;
+        this.checklistDayNumber = checklistDayNumber;
     }
 }

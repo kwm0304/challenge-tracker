@@ -29,7 +29,7 @@ public class UserMapperImpl implements UserMapper {
                 .filter(Challenge::isActive).findFirst()
                 .map(this::toChallengeDto)
                 .orElse(null);
-        int dayNumber = 0;
+        int dayNumber = 1;
         int numberCompleted = 0;
         if (activeChallengeDto != null) {
             dayNumber = activeChallengeDto.getDayNumber();
@@ -66,6 +66,6 @@ public class UserMapperImpl implements UserMapper {
         }
         return new ChecklistDto(checklist.getId(), checklist.getDate(), checklist.getWorkoutOne(),
         checklist.getWorkoutTwo(), checklist.getReadTenPages(), checklist.getDrinkWater(), checklist.getNoCheatMeals(),
-                checklist.getNoAlcohol(), checklist.getTakePicture());
+                checklist.getNoAlcohol(), checklist.getTakePicture(), checklist.getChecklistDayNumber());
     }
 }
