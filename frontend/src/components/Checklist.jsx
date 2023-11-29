@@ -72,6 +72,7 @@ const Checklist = () => {
     localStorage.removeItem('numberCompleted');
     localStorage.removeItem('dayNumber');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('checklistState');
   };
   console.log('checkliststate', checklistState)
 
